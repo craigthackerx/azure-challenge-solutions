@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -xe
-VIRTUAL_ENV="app"
+VIRTUAL_ENV="hello-world-api"
 CURRENT_LOCATION="$(pwd)"
 
 #Forces script to execute current directory
