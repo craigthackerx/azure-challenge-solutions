@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+
+  hello-world-api:
+    build: ./hello-world-api
+    image: "docker.io/craigtho/azure-hello-world-api:latest"
+    container_name: azure-hello-world-api
+    restart: unless-stopped
+    ports:
+      - "8080:2021/tcp"
+
+  grafana:
+    build: ./grafana
+    image: "docker.io/craigtho/azure-hello-world-grafana:latest"
+    container_name: azure-hello-world-grafama
+    restart: unless-stopped
+    ports:
+      - "8090:3000/tcp"
+    volumes:
+      - ./grafana/grafana-data:/var/lib/grafana
+volumes:
+  grafana-data:

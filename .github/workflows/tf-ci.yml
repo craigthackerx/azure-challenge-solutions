@@ -1,0 +1,60 @@
+name: 'Terraform CI'
+
+on:
+  push:
+    branches:
+    - main
+    - dev
+    - mvp
+    - feature*
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    name: 'Terraform CI'
+    runs-on: ubuntu-latest
+    environment: mvp
+    env:
+      PIPELINE_PLAN: "azure-pipline.plan"
+      TERRAFORM_PATH: "terraform"
+      SHORTHAND_PROJECT_NAME: "hw"
+      SHORTHAND_ENVIRONMENT: "mvp"
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: hashicorp/setup-terraform@v1.2.1
+      - uses: actions/checkout@v2
+
+      # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+      - name: Terraform Init & Plan
+        working-directory: ./terraform
+        run: |
+          terraform init \
+          backend-config="storage_account_name=${TF_VAR_AZURE_BACKEND_SA_NAME}" \
+          -backend-config="access_key=${TF_VAR_AZURE_SA_KEY}" \
+          -backend-config="container_name=${TF_VAR_AZURE_BACKEND_SA_CONTAINER_NAME}" \
+          -backend-config="key=${TF_VAR_AZURE_SHORT}-${TF_VAR_AZURE_ENV}.terraform.tfstate" && \
+          terraform plan -out ${PIPELINE_PLAN}
+        env:
+          TF_VAR_AZURE_SHORT: ${{ env.AZURE_SHORTHAND_PROJECT_NAME }}
+          TF_VAR_AZURE_ENV: ${{ env.AZURE_SHORTHAND_ENVIRONMENT }}
+
+          TF_VAR_AZURE_BACKEND_SA_NAME: ${{ secrets.TF_VAR_AZURE_BACKEND_SA_NAME }}
+          TF_VAR_AZURE_BACKEND_SA_KEY: ${{ secrets.TF_VAR_AZURE_BACKEND_SA_KEY}}
+          TF_VAR_AZURE_BACKEND_SA_CONTAINER_NAME: ${{ secrets.TF_VAR_AZURE_BACKEND_SA_CONTAINER_NAME }}
+
+          TF_VAR_AZURE_CLIENT_ID: ${{ secrets.TF_VAR_AZURE_CLIENT_ID }}
+          TF_VAR_AZURE_CLIENT_SECRET: ${{ secrets.TF_VAR_AZURE_CLIENT_SECRET }}
+          TF_VAR_AZURE_TENANT_ID: ${{ secrets.TF_VAR_AZURE_TENANT_ID}}
+          TF_VAR_AZURE_SUBSCRIPTION_ID: ${{ secrets.TF_VAR_AZURE_SUBSCRIPTION_ID}}
+
+      - name: Checkov GitHub Action
+        uses: bridgecrewio/checkov-action@v12.641.0
+        with:
+          directory: ./terraform
+          skip_check:
