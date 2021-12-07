@@ -169,3 +169,16 @@ cython_debug/
 /cyberscot/app/bin/*
 /cyberscot/app/lib/*
 /container/podman/grafana/grafana-data/
+
+
+#Vagrant ignore
+*.vagrant
+*.vagrant.*
+*.package.box.*
+*package.box*
+
+container/podman/grafana/grafana-data
+!container/podman/grafana/grafana-data/hello-world.py
+
+
+
