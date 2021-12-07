@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: mvp
     env:
-      PIPELINE_PLAN: "azure-pipline.plan"
+      PIPELINE_PLAN: "azure-pipeline.plan"
       TERRAFORM_PATH: "terraform"
       SHORTHAND_PROJECT_NAME: "hw"
       SHORTHAND_ENVIRONMENT: "mvp"
