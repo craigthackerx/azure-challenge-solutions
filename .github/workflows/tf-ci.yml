@@ -20,7 +20,7 @@ jobs:
       TERRAFORM_PATH: "terraform"
       SHORTHAND_PROJECT_NAME: "hw"
       SHORTHAND_ENVIRONMENT: "mvp"
-      TERRAFORM_COMPLIANCE_POLICY: "git://https://github.com/craigthackerx/azure-terraform-compliance-naming-convention.git"
+      TERRAFORM_COMPLIANCE_POLICY: "https://github.com/craigthackerx/azure-terraform-compliance-naming-convention.git"
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
