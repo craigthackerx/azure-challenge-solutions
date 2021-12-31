@@ -3,8 +3,8 @@ terraform {
   required_providers {
     azurerm = {
       source                = "hashicorp/azurerm"
-      configuration_aliases = [azurerm.default-provider]
-      //        version = "~> 2.68.0"
+#      configuration_aliases = [azurerm.default-provider]
+#      version = "~> 2.68.0"
     }
   }
   backend "azurerm" {
