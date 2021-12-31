@@ -73,5 +73,4 @@ jobs:
         uses: terraform-compliance/github_action@0.3.0
         with:
           plan: ${{ env.TERRAFORM_PATH}}/${{ env.PIPELINE_PLAN}}
-#          features: ${{ env.TERRAFORM_COMPLIANCE_POLICY}}
-          features: azure-policy
+          features: ${{ env.TERRAFORM_COMPLIANCE_POLICY}}
