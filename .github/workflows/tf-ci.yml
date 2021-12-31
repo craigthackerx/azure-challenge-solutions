@@ -45,7 +45,7 @@ jobs:
             -backend-config="container_name=${TF_VAR_AZURE_BACKEND_SA_CONTAINER_NAME}" \
             -backend-config="key=${TF_VAR_AZURE_SHORT}-${TF_VAR_AZURE_ENV}.terraform.tfstate" && \
 
-            printf '%s' "${TF_VAR_AZURE_ENV}" > .terraform/environment && \
+#            printf '%s' "${TF_VAR_AZURE_ENV}" > .terraform/environment && \
 
 #            terraform workspace select "${TF_VAR_AZURE_ENV}" && \
 
