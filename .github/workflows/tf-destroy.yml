@@ -35,8 +35,8 @@ jobs:
           -backend-config="key=${TF_VAR_AZURE_SHORT}-${TF_VAR_AZURE_ENV}.terraform.tfstate" && \
           terraform plan -out $(PIPELINE_PLAN)
         env:
-          TF_VAR_AZURE_SHORT: ${{ env.AZURE_SHORTHAND_PROJECT_NAME }}
-          TF_VAR_AZURE_ENV: ${{ env.AZURE_SHORTHAND_ENVIRONMENT }}
+          TF_VAR_AZURE_SHORT: ${{ env.SHORTHAND_PROJECT_NAME }}
+          TF_VAR_AZURE_ENV: ${{ env.SHORTHAND_ENVIRONMENT }}
 
           TF_VAR_AZURE_BACKEND_SA_NAME: ${{ secrets.TF_VAR_AZURE_BACKEND_SA_NAME }}
           TF_VAR_AZURE_BACKEND_SA_KEY: ${{ secrets.TF_VAR_AZURE_BACKEND_SA_KEY}}
