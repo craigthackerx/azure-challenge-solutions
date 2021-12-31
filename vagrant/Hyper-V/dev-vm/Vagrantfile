@@ -1,0 +1,90 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+Vagrant.configure("2") do |config|
+  config.vm.box = "generic/debian11"
+  config.vm.hostname = "debian-11-base"
+
+  config.vm.network "forwarded_port", guest: 8080, host: 8080
+  config.vm.network "forwarded_port", guest: 8090, host: 8090
+
+  config.vm.synced_folder "../../../../azure-challenge-solutions", "/home/vagrant/azure-challenge-solutions"
+
+  
+  config.vm.provider "hyper-v" do |v|
+    v.cpus = "2"
+    v.memory = "4096"
+    v.name = "dev-vm"
+  end
+
+  config.vm.provision "shell", inline: <<-SHELL
+      set -xe
+
+      #Add Timezone'
+      ln -snf /usr/share/zoneinfo/Europe/London /etc/localtime && echo Europe/London > /etc/timezone && \
+      
+      #Install packages
+      export DEBIAN_FRONTEND=noninteractive && \
+      apt-get update -y && apt-get dist-upgrade -y && apt-get install -y \
+      apt-transport-https \
+      build-essential \
+      ca-certificates \
+      curl \
+      dbus-user-session \
+      dkms \
+      dos2unix \
+      dnsdiag \
+      git \
+      gnupg-agent \
+      htop \
+      ifupdown \
+      linux-headers-$(uname -r) \
+      locales \
+      nano \
+      neofetch \
+      openssh-server \
+      openssl \
+      podman \
+      pip \
+      sudo \
+      software-properties-common \
+      wget \
+      whois \
+      unzip \
+      vim \
+      zip && \
+      
+      #Clean up installs
+      apt-get autoremove && apt-get autoclean && apt-get clean && \
+
+      #Configure ssh
+      systemctl enable ssh && \
+      systemctl restart ssh
+
+      echo vagrant:vagrant | chpasswd && \
+      loginctl enable-linger 1000
+
+      echo "Vagrant build done for root"
+
+  SHELL
+
+  config.vm.provision "shell", privileged: false, inline: <<-SHELL
+
+  set -xe
+  
+  if [ "$(command -v pip3)" ]; then
+
+    export PATH=$PATH:${HOME}/.local/bin && \
+    source ${HOME}/.bashrc && \
+    pip3 install --user podman-compose && \
+
+    cd azure-challenge-solutions/container/podman/grafana && \
+    mkdir -p grafana-data && \
+    systemctl --user enable --now dbus.socket && \
+    echo "The VM is now setup.  On your host, run vagrant ssh and then  cd azure-challenge-solutions/container/podman/ && podman-compose up -d" && \
+    cd .. && podman-compose up -d
+
+  else
+    echo "Error running user script"
+  fi
+  SHELL
+end
