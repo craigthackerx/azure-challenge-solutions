@@ -15,5 +15,4 @@ data "azurerm_key_vault" "mgmt_kv" {
 data "azurerm_key_vault_secret" "mgmt_local_admin_pwd" {
   key_vault_id = data.azurerm_key_vault.mgmt_kv.id
   name         = "Local${var.AZURE_SHORT}Admin${terraform.workspace}-pwd"
-
 }
