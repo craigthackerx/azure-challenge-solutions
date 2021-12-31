@@ -35,7 +35,7 @@ jobs:
       - name: Terraform Init & Plan
         working-directory: ./terraform
         run: |
-
+          set -xe
           terraform init \
           -backend-config="storage_account_name=${TF_VAR_AZURE_BACKEND_SA_NAME}" \
           -backend-config="access_key=${TF_VAR_AZURE_SA_KEY}" \
