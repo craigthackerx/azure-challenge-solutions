@@ -72,5 +72,5 @@ jobs:
       - name: terraform-compliance
         uses: terraform-compliance/github_action@0.3.0
         with:
-          plan: ${{ env.PIPELINE_PLAN}}
+          plan: ${{ env.TERRAFORM_PATH}}/${{ env.PIPELINE_PLAN}}
           features: ${{ env.TERRAFORM_COMPLIANCE_POLICY}}

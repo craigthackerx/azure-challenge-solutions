@@ -1,13 +1,13 @@
 resource "azurerm_resource_group" "net_rg" {
   location = "UK South"
-  name     = "rg-${var.AZURE_SHORT}-${var.AZURE_ENV}-net"
+  name     = "rg-${var.AZURE_SHORT}-${terraform.workspace}-net"
   tags     = local.tags
 }
 
 resource "azurerm_virtual_network" "main_vnet" {
   location            = azurerm_resource_group.net_rg.location
   resource_group_name = azurerm_resource_group.net_rg.name
-  name                = "vnet-${var.AZURE_SHORT}-${var.AZURE_ENV}-01"
+  name                = "vnet-${var.AZURE_SHORT}-${terraform.workspace}-01"
   address_space       = ["10.0.0.0/23"]
   tags                = local.tags
 }
