@@ -64,13 +64,13 @@ jobs:
           TF_VAR_AZURE_SUBSCRIPTION_ID: ${{ secrets.TF_VAR_AZURE_SUBSCRIPTION_ID}}
 
       - name: Checkov GitHub Action
-        uses: bridgecrewio/checkov-action
+        uses: bridgecrewio/checkov-action@latest
         with:
           directory: ./terraform
           skip_check:
 
       - name: terraform-compliance
-        uses: terraform-compliance/github_action@0.3.0
+        uses: terraform-compliance/github_action@latest
         with:
           plan: ${{ env.PIPELINE_PLAN}}
           features: ${{ env.TERRAFORM_COMPLIANCE_POLICY}}
