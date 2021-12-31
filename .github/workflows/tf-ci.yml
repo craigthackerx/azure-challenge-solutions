@@ -36,7 +36,7 @@ jobs:
         working-directory: ./terraform
         run: |
 
-          if [ -d ".terraform" ]; then rm -rf .terraform && \
+          rm -rf .terraform && \
           mkdir -p .terraform && \
 
           terraform init \
