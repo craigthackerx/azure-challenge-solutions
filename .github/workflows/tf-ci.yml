@@ -16,10 +16,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: mvp
     env:
-      PIPELINE_PLAN: "azure-pipeline.plan"
+      PIPELINE_PLAN: "pipeline.plan"
       TERRAFORM_PATH: "terraform"
       SHORTHAND_PROJECT_NAME: "hw"
       SHORTHAND_ENVIRONMENT: "mvp"
+      TERRAFORM_COMPLIANCE_POLICY: "git://https://github.com/craigthackerx/azure-terraform-compliance-naming-convention.git"
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
@@ -54,7 +55,13 @@ jobs:
           TF_VAR_AZURE_SUBSCRIPTION_ID: ${{ secrets.TF_VAR_AZURE_SUBSCRIPTION_ID}}
 
       - name: Checkov GitHub Action
-        uses: bridgecrewio/checkov-action@v12.641.0
+        uses: bridgecrewio/checkov-action
         with:
           directory: ./terraform
           skip_check:
+
+      - name: terraform-compliance
+        uses: terraform-compliance/github_action@0.3.0
+        with:
+          plan: ${{ env.PIPELINE_PLAN}}
+          features: ${{ env.TERRAFORM_COMPLIANCE_POLICY}}

@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: mvp
     env:
-      PIPELINE_PLAN: "azure-pipeline.plan"
+      PIPELINE_PLAN: "pipeline.plan"
       TERRAFORM_PATH: "terraform"
       SHORTHAND_PROJECT_NAME: "hw"
       SHORTHAND_ENVIRONMENT: "mvp"
@@ -53,7 +53,13 @@ jobs:
           directory: ./terraform
           skip_check:
 
-          
+      - name: terraform-compliance
+        uses: terraform-compliance/github_action@0.3.0
+        with:
+          plan: ${{ env.PIPELINE_PLAN}}
+          features: ${{ env.TERRAFORM_COMPLIANCE_POLICY}}
+
+
       # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Apply
         working-directory: ./terraform

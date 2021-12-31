@@ -16,7 +16,7 @@ variable "azure_bastion_required_rules" {
 }
 
 resource "azurerm_public_ip" "bas_pip" {
-  name                = "pip-${var.AZURE_SHORT}-${var.AZURE_ENV}"
+  name                = "pip-${var.AZURE_SHORT}-${terraform.workspace}"
   location            = azurerm_resource_group.net_rg.location
   resource_group_name = azurerm_resource_group.net_rg.name
   allocation_method   = "Static"
@@ -25,12 +25,12 @@ resource "azurerm_public_ip" "bas_pip" {
 }
 
 resource "azurerm_bastion_host" "bas_host" {
-  name                = "bas-${var.AZURE_SHORT}-${var.AZURE_ENV}"
+  name                = "bas-${var.AZURE_SHORT}-${terraform.workspace}"
   location            = azurerm_resource_group.net_rg.location
   resource_group_name = azurerm_resource_group.net_rg.name
 
   ip_configuration {
-    name                 = "bas-${var.AZURE_SHORT}-${var.AZURE_ENV}-ipconfig"
+    name                 = "bas-${var.AZURE_SHORT}-${terraform.workspace}-ipconfig"
     subnet_id            = azurerm_subnet.bastion_sn.name
     public_ip_address_id = azurerm_public_ip.bas_pip.id
   }
@@ -39,7 +39,7 @@ resource "azurerm_bastion_host" "bas_host" {
 }
 
 resource "azurerm_network_security_group" "bas_nsg" {
-  name                = "nsg-bas-${var.AZURE_SHORT}-${var.AZURE_ENV}"
+  name                = "nsg-bas-${var.AZURE_SHORT}-${terraform.workspace}"
   location            = azurerm_resource_group.net_rg.location
   resource_group_name = azurerm_resource_group.net_rg.name
   tags                = local.tags

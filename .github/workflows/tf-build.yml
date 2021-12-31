@@ -15,10 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     environment: mvp
     env:
-      PIPELINE_PLAN: "azure-pipeline.plan"
+      PIPELINE_PLAN: "pipeline.plan"
       TERRAFORM_PATH: "terraform"
       SHORTHAND_PROJECT_NAME: "hw"
       SHORTHAND_ENVIRONMENT: "mvp"
+      TERRAFORM_COMPLIANCE_POLICY: "git://https://github.com/craigthackerx/azure-terraform-compliance-naming-convention.git"
+
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
@@ -58,6 +60,13 @@ jobs:
           directory: ./terraform
           skip_check:
 
+      - name: terraform-compliance
+        uses: terraform-compliance/github_action@0.3.0
+        with:
+          plan: ${{ env.PIPELINE_PLAN}}
+          features: ${{ env.TERRAFORM_COMPLIANCE_POLICY}}
+
+
       # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Apply
         working-directory: ./terraform
@@ -66,3 +75,4 @@ jobs:
         env:
           TF_VAR_AZURE_SHORT: ${{ env.AZURE_SHORTHAND_PROJECT_NAME }}
           TF_VAR_AZURE_ENV: ${{ env.AZURE_SHORTHAND_ENVIRONMENT }}
+
