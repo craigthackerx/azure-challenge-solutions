@@ -38,3 +38,8 @@ resource "azurerm_network_security_rule" "DenyAllInbound" {
   resource_group_name         = azurerm_resource_group.net_rg.name
   network_security_group_name = azurerm_network_security_group.main_nsg.name
 }
+
+resource "azurerm_subnet_network_security_group_association" "mauin_nsg_assoc" {
+  network_security_group_id = azurerm_network_security_group.main_nsg.id
+  subnet_id                 = azurerm_subnet.main_sn.id
+}

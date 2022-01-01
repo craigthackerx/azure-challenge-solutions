@@ -1,0 +1,40 @@
+#cloud-config
+package_upgrade: true
+package_update: true
+packages:
+  - cifs-utils
+  - jq
+  - podman
+  - python3-pip
+  - git
+
+write-files:
+- path: /root/podman/podman-init.sh
+content: |
+  set -xe
+
+  [ "$(whoami)" = root ] || { sudo "$0" "$@"; exit $?; }
+
+  if [ "$(command -v pip3)" ]; then
+
+    export PATH=$PATH:${HOME}/.local/bin && \
+    source ${HOME}/.bashrc && \
+    pip3 install --user podman-compose && \
+
+    git clone https://github.com/craigthackerx/azure-challenge-solutions.git && \
+
+    cd azure-challenge-solutions/container/podman/grafana && \
+    mkdir -p grafana-data && \
+    systemctl --user enable --now dbus.socket && \
+    echo "The VM is now setup.  On your host, run vagrant ssh and then  cd azure-challenge-solutions/container/podman/ && podman-compose up -d" && \
+    cd .. && podman-compose up -d
+
+  else
+    echo "Error running user script"
+  fi
+
+runcmd:
+  - timedatectl set-timezone Europe/London
+  - setsebool -P container_manage_cgroup on
+  - chmod +x /root/podman/podman-init.sh
+  - sh /root/podman/podman-init.sh

@@ -61,3 +61,7 @@ resource "azurerm_network_security_rule" "bas_nsg" {
   network_security_group_name = azurerm_network_security_group.bas_nsg.name
 }
 
+resource "azurerm_subnet_network_security_group_association" "bas_nsg_assoc" {
+  network_security_group_id = azurerm_network_security_group.bas_nsg.id
+  subnet_id                 = azurerm_subnet.bastion_sn.id
+}

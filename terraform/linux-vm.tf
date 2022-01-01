@@ -22,6 +22,7 @@ resource "azurerm_linux_virtual_machine" "lnx_vm" {
   admin_password                  = data.azurerm_key_vault_secret.mgmt_local_admin_pwd.value
   admin_username                  = "Local${var.short}Admin${terraform.workspace}"
   provision_vm_agent              = "true"
+  custom_data                     = base64encode(file(file("../azure-init/scripts/cloud-init.yml")))
   size                            = "Standard_B1s"
   disable_password_authentication = true
 
