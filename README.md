@@ -2,6 +2,11 @@
 
 Welcome to the Azure challenge.  This challenge is intended to test your basic competency within a typical Cloud and DevOps based scenario.  While it is possible to complete this project and implement a fully functional and complete product, the intention is to give you experience with a full-stack type system development and deployment as well as to gauge your ability to complete, document and think about tasks at a technical level
 
+[![Terraform CI](https://github.com/craigthackerx/azure-challenge-solutions/actions/workflows/tf-ci.yml/badge.svg)](https://github.com/craigthackerx/azure-challenge-solutions/actions/workflows/tf-ci.yml)
+
+[![Terraform Build](https://github.com/craigthackerx/azure-challenge-solutions/actions/workflows/tf-build.yml/badge.svg)](https://github.com/craigthackerx/azure-challenge-solutions/actions/workflows/tf-build.yml)
+
+[![Terraform Destroy](https://github.com/craigthackerx/azure-challenge-solutions/actions/workflows/tf-destroy.yml/badge.svg)](https://github.com/craigthackerx/azure-challenge-solutions/actions/workflows/tf-destroy.yml)
 
 For this, I recommend you sign up for a Free Azure Account and get Azure credits.  I also recommend [using Azure free tier for all resources](https://adamtheautomator.com/azure-free/).
 

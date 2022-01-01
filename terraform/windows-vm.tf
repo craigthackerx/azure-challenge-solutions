@@ -49,6 +49,8 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
+
+  tags = local.tags
 }
 
 resource "azurerm_application_security_group" "win_asg" {

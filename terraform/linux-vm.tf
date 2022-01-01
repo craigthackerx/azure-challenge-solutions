@@ -47,6 +47,8 @@ resource "azurerm_linux_virtual_machine" "lnx_vm" {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
+
+  tags = local.tags
 }
 
 resource "azurerm_application_security_group" "lnx_asg" {
