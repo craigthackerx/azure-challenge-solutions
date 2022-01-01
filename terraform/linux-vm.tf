@@ -35,9 +35,9 @@ resource "azurerm_linux_virtual_machine" "lnx_vm" {
   }
 
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "21.04-LTS"
+    publisher = "debian"
+    offer     = "debian-11"
+    sku       = "11-gen2"
     version   = "latest"
   }
 

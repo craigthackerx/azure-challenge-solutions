@@ -44,7 +44,10 @@ jobs:
 
           terraform workspace select "${TF_VAR_env}" && \
 
-          terraform plan -destroy -out ${PIPELINE_PLAN}
+          terraform plan -destroy -out ${PIPELINE_PLAN} && \
+
+          terraform validate
+
         env:
           TF_VAR_short: ${{ env.SHORTHAND_PROJECT_NAME }}
           TF_VAR_env: ${{ env.SHORTHAND_ENVIRONMENT }}
