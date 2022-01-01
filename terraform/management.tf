@@ -4,7 +4,7 @@ data "azurerm_resource_group" "mgmt_rg" {
 }
 
 data "azurerm_ssh_public_key" "mgmt_ssh_key" {
-  name                = "ssh-${var.short}-${var.mloc}-${terraform.workspace}-pub-mgt"
+  name                = "ssh-${var.short}-${var.loc}-${terraform.workspace}-pub-mgt"
   resource_group_name = data.azurerm_resource_group.mgmt_rg.name
 }
 
