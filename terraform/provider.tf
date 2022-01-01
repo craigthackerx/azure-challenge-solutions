@@ -1,6 +1,6 @@
 provider "azurerm" {
 
-#  alias = "default-provider"
+  #  alias = "default-provider"
 
   client_id       = var.AZURE_CLIENT_ID
   client_secret   = var.AZURE_CLIENT_SECRET
