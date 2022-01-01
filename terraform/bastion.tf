@@ -31,7 +31,7 @@ resource "azurerm_bastion_host" "bas_host" {
 
   ip_configuration {
     name                 = "bas-${var.AZURE_SHORT}-${var.loc}-${terraform.workspace}-ipconfig"
-    subnet_id            = azurerm_subnet.bastion_sn.name
+    subnet_id            = azurerm_subnet.bastion_sn.id
     public_ip_address_id = azurerm_public_ip.bas_pip.id
   }
 
