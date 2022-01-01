@@ -22,7 +22,6 @@ resource "azurerm_linux_virtual_machine" "lnx_vm" {
   admin_password                  = data.azurerm_key_vault_secret.mgmt_local_admin_pwd.value
   admin_username                  = "Local${var.short}Admin${terraform.workspace}"
   provision_vm_agent              = "true"
-  enable_automatic_updates        = "false"
   patch_mode                      = "Manual"
   size                            = "Standard_B1s"
   disable_password_authentication = true
@@ -52,7 +51,7 @@ resource "azurerm_linux_virtual_machine" "lnx_vm" {
 }
 
 resource "azurerm_application_security_group" "lnx_asg" {
-  name                = "asg-${azurerm_linux_virtual_machine.lnx_vm.name}"
+  name                = "asg-${azurerm_linux_virtual_machine.lnx_vm[count.index].name}"
   location            = azurerm_resource_group.vm_rg.location
   resource_group_name = azurerm_resource_group.vm_rg.name
 
