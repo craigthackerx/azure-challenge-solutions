@@ -7,7 +7,7 @@ resource "azurerm_resource_group" "vm_rg" {
 resource "azurerm_network_interface" "win_nic" {
   count               = var.win_count
   location            = azurerm_resource_group.vm_rg.location
-  name                = "win${var.short}${var.loc}${terraform.workspace}${count.index + 1}-nic"
+  name                = "nic-win${var.short}${var.loc}${terraform.workspace}${count.index + 1}"
   resource_group_name = azurerm_resource_group.vm_rg.name
 
   ip_configuration {
