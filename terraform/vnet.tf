@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "net_rg" {
-  location = "West Europe"
+  location = "UK South"
   name     = "rg-${var.short}-${var.loc}-${terraform.workspace}-net"
   tags     = local.tags
 }

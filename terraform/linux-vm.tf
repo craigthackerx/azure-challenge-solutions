@@ -1,7 +1,7 @@
 resource "azurerm_network_interface" "lnx_nic" {
   count               = var.lnx_count
   location            = azurerm_resource_group.vm_rg.location
-  name                = "vm${var.short}${var.loc}${terraform.workspace}${count.index + 1}-nic"
+  name                = "nic-vm${var.short}${var.loc}${terraform.workspace}${count.index + 1}"
   resource_group_name = azurerm_resource_group.vm_rg.name
 
   ip_configuration {

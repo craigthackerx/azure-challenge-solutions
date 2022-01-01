@@ -19,7 +19,7 @@ jobs:
       TERRAFORM_PATH: "terraform"
       SHORTHAND_PROJECT_NAME: "hw"
       SHORTHAND_ENVIRONMENT: "mvp"
-      SHORTHAND_LOCATION: "euw"
+      SHORTHAND_LOCATION: "uks"
       TERRAFORM_COMPLIANCE_POLICY: "https://github.com/craigthackerx/azure-terraform-compliance-naming-convention.git//?ref=main"
 
 
