@@ -50,7 +50,9 @@ jobs:
 
           terraform workspace select "${TF_VAR_env}" && \
 
-          terraform plan -out ${PIPELINE_PLAN}
+          terraform plan -out ${PIPELINE_PLAN} && \
+
+          terraform validate
 
         env:
           TF_VAR_short: ${{ env.SHORTHAND_PROJECT_NAME }}

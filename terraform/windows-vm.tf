@@ -66,20 +66,20 @@ resource "azurerm_network_interface_application_security_group_association" "win
   application_security_group_id = azurerm_application_security_group.win_asg.id
 }
 
-resource "azurerm_virtual_machine_extension" "win_custom_script" {
-  count                = var.win_count
-  name                 = "CustomScript"
-  virtual_machine_id   = element(azurerm_windows_virtual_machine.win_vm.*.id, count.index + 1)
-  publisher            = "Microsoft.Compute"
-  type                 = "CustomScriptExtension"
-  type_handler_version = "1.10"
-
-
-  protected_settings = <<PROTECTED_SETTINGS
-      {
-        "commandToExecute": "powershell -encodedCommand ${textencodebase64(file("../azure-init/scripts/WindowsInitScript.ps1"), "UTF-16LE")}"
-      }
-  PROTECTED_SETTINGS
-
-  tags = local.tags
-}
+#resource "azurerm_virtual_machine_extension" "win_custom_script" {
+#  count                = var.win_count
+#  name                 = "CustomScript"
+#  virtual_machine_id   = element(azurerm_windows_virtual_machine.win_vm.*.id, count.index + 1)
+#  publisher            = "Microsoft.Compute"
+#  type                 = "CustomScriptExtension"
+#  type_handler_version = "1.10"
+#
+#
+#  protected_settings = <<PROTECTED_SETTINGS
+#      {
+#        "commandToExecute": "powershell -encodedCommand ${textencodebase64(file("../azure-init/scripts/WindowsInitScript.ps1"), "UTF-16LE")}"
+#      }
+#  PROTECTED_SETTINGS
+#
+#  tags = local.tags
+#}
