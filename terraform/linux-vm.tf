@@ -35,8 +35,8 @@ resource "azurerm_linux_virtual_machine" "lnx_vm" {
   }
 
   source_image_reference {
-    offer     = "Canonical"
-    publisher = "UbuntuServer"
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
     sku       = "21.04-LTS"
     version   = "latest"
   }

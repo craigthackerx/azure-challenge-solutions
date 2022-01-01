@@ -45,7 +45,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
 
   os_disk {
     name                 = "win${var.short}${var.loc}${terraform.workspace}${count.index + 1}-osdisk"
-    disk_size_gb         = "63"
+    disk_size_gb         = "127"
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
