@@ -14,6 +14,7 @@ jobs:
       TERRAFORM_PATH: "terraform"
       SHORTHAND_PROJECT_NAME: "hw"
       SHORTHAND_ENVIRONMENT: "mvp"
+      TERRAFORM_COMPLIANCE_POLICY: "https://github.com/craigthackerx/azure-terraform-compliance-naming-convention.git//?ref=main"
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
@@ -65,9 +66,8 @@ jobs:
       - name: terraform-compliance
         uses: terraform-compliance/github_action@0.3.0
         with:
-          plan: ${{ env.PIPELINE_PLAN}}
+          plan: ${{ env.TERRAFORM_PATH}}/${{ env.PIPELINE_PLAN}}
           features: ${{ env.TERRAFORM_COMPLIANCE_POLICY}}
-
 
       # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Apply
