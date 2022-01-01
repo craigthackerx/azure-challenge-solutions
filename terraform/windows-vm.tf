@@ -7,11 +7,11 @@ resource "azurerm_resource_group" "vm_rg" {
 resource "azurerm_network_interface" "win_nic" {
   count               = var.win_count
   location            = azurerm_resource_group.vm_rg.location
-  name                = "vm${var.short}${var.loc}${terraform.workspace}${count.index + 1}-nic"
+  name                = "win${var.short}${var.loc}${terraform.workspace}${count.index + 1}-nic"
   resource_group_name = azurerm_resource_group.vm_rg.name
 
   ip_configuration {
-    name                          = "vm${var.short}${var.loc}${terraform.workspace}${count.index + 1}-nic-ipconfig"
+    name                          = "win${var.short}${var.loc}${terraform.workspace}${count.index + 1}-nic-ipconfig"
     private_ip_address_allocation = "Dynamic"
     subnet_id                     = azurerm_subnet.main_sn.id
   }
@@ -23,7 +23,8 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   count                    = var.win_count
   location                 = azurerm_resource_group.vm_rg.location
   resource_group_name      = azurerm_resource_group.vm_rg.name
-  name                     = "vm${var.short}${var.loc}${terraform.workspace}${count.index + 1}"
+  name                     = "win${var.short}${var.loc}${terraform.workspace}${count.index + 1}"
+  computer_name            = "win${var.short}${var.loc}${terraform.workspace}${count.index + 1}"
   admin_password           = data.azurerm_key_vault_secret.mgmt_local_admin_pwd.value
   admin_username           = "Local${var.short}Admin${terraform.workspace}"
   provision_vm_agent       = "true"
@@ -43,7 +44,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   }
 
   os_disk {
-    name                 = "vm${var.short}${var.loc}${terraform.workspace}${count.index + 1}-osdisk"
+    name                 = "win${var.short}${var.loc}${terraform.workspace}${count.index + 1}-osdisk"
     disk_size_gb         = "63"
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
@@ -51,7 +52,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
 }
 
 resource "azurerm_application_security_group" "win_asg" {
-  name                = "asg-win-${var.short}-${var.loc}-${terraform.workspace}"
+  name                = "asg-${azurerm_windows_virtual_machine.win_vm.name}"
   location            = azurerm_resource_group.vm_rg.location
   resource_group_name = azurerm_resource_group.vm_rg.name
 
