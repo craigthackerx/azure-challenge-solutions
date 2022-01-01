@@ -35,13 +35,22 @@ jobs:
       - name: Terraform Init & Plan
         working-directory: ./terraform
         run: |
+
+          rm -rf .terraform && \
+          mkdir -p .terraform && \
+
           terraform init \
           -backend-config="storage_account_name=${TF_VAR_AZURE_BACKEND_SA_NAME}" \
-          -backend-config="access_key=${TF_VAR_AZURE_SA_KEY}" \
+          -backend-config="access_key=${TF_VAR_AZURE_BACKEND_SA_KEY}" \
           -backend-config="container_name=${TF_VAR_AZURE_BACKEND_SA_CONTAINER_NAME}" \
           -backend-config="key=${TF_VAR_AZURE_SHORT}-${TF_VAR_AZURE_ENV}.terraform.tfstate" && \
 
+          printf '%s' "${TF_VAR_AZURE_ENV}" > .terraform/environment && \
+
+          terraform workspace select "${TF_VAR_AZURE_ENV}" && \
+
           terraform plan -out ${PIPELINE_PLAN}
+
         env:
           TF_VAR_AZURE_SHORT: ${{ env.SHORTHAND_PROJECT_NAME }}
           TF_VAR_AZURE_ENV: ${{ env.SHORTHAND_ENVIRONMENT }}
@@ -64,7 +73,7 @@ jobs:
       - name: terraform-compliance
         uses: terraform-compliance/github_action@0.3.0
         with:
-          plan: ${{ env.PIPELINE_PLAN}}
+          plan: ${{ env.TERRAFORM_PATH}}/${{ env.PIPELINE_PLAN}}
           features: ${{ env.TERRAFORM_COMPLIANCE_POLICY}}
 
 
