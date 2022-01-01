@@ -50,7 +50,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
 }
 
 resource "azurerm_application_security_group" "win_asg" {
-  name                = "asg-win${var.AZURE_SHORT}${var.loc}${terraform.workspace}"
+  name                = "asg-win-${var.AZURE_SHORT}-${var.loc}-${terraform.workspace}"
   location            = azurerm_resource_group.vm_rg.location
   resource_group_name = azurerm_resource_group.vm_rg.name
 
