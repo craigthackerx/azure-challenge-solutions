@@ -50,8 +50,7 @@ resource "azurerm_linux_virtual_machine" "lnx_vm" {
 }
 
 resource "azurerm_application_security_group" "lnx_asg" {
-  count               = var.lnx_count
-  name                = "asg-${azurerm_linux_virtual_machine.lnx_vm[count.index].name}"
+  name                = "asg-lnx${var.short}${var.loc}${terraform.workspace}"
   location            = azurerm_resource_group.vm_rg.location
   resource_group_name = azurerm_resource_group.vm_rg.name
 
