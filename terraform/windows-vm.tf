@@ -7,11 +7,11 @@ resource "azurerm_resource_group" "vm_rg" {
 resource "azurerm_network_interface" "win_nic" {
   count               = var.win_count
   location            = "UK South"
-  name                = "${local.win_vm_name}-nic"
+  name                = "vm${var.AZURE_SHORT}${var.loc}${terraform.workspace}${count.index + 1}-nic"
   resource_group_name = azurerm_resource_group.vm_rg.name
 
   ip_configuration {
-    name                          = "${local.win_vm_name}-nic-ipconfig"
+    name                          = "vm${var.AZURE_SHORT}${var.loc}${terraform.workspace}${count.index + 1}-nic-ipconfig"
     private_ip_address_allocation = "Dynamic"
   }
 
@@ -22,7 +22,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   count                    = var.win_count
   location                 = azurerm_resource_group.vm_rg.location
   resource_group_name      = azurerm_resource_group.vm_rg.name
-  name                     = local.win_vm_name
+  name                     = "vm${var.AZURE_SHORT}${var.loc}${terraform.workspace}${count.index + 1}"
   admin_password           = data.azurerm_key_vault_secret.mgmt_local_admin_pwd.value
   admin_username           = "Local${var.AZURE_SHORT}Admin${terraform.workspace}"
   provision_vm_agent       = "true"
@@ -42,7 +42,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   }
 
   os_disk {
-    name                 = "${local.win_vm_name}-osdisk"
+    name                 = "vm${var.AZURE_SHORT}${var.loc}${terraform.workspace}${count.index + 1}-osdisk"
     disk_size_gb         = "63"
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
