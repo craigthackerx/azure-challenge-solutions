@@ -19,6 +19,7 @@ jobs:
       TERRAFORM_PATH: "terraform"
       SHORTHAND_PROJECT_NAME: "hw"
       SHORTHAND_ENVIRONMENT: "mvp"
+      SHORTHAND_LOCATION: "euw"
       TERRAFORM_COMPLIANCE_POLICY: "https://github.com/craigthackerx/azure-terraform-compliance-naming-convention.git//?ref=main"
 
 
@@ -43,17 +44,18 @@ jobs:
           -backend-config="storage_account_name=${TF_VAR_AZURE_BACKEND_SA_NAME}" \
           -backend-config="access_key=${TF_VAR_AZURE_BACKEND_SA_KEY}" \
           -backend-config="container_name=${TF_VAR_AZURE_BACKEND_SA_CONTAINER_NAME}" \
-          -backend-config="key=${TF_VAR_AZURE_SHORT}-${TF_VAR_AZURE_ENV}.terraform.tfstate" && \
+          -backend-config="key=${TF_VAR_short}-${TF_VAR_env}.terraform.tfstate" && \
 
-          printf '%s' "${TF_VAR_AZURE_ENV}" > .terraform/environment && \
+          printf '%s' "${TF_VAR_env}" > .terraform/environment && \
 
-          terraform workspace select "${TF_VAR_AZURE_ENV}" && \
+          terraform workspace select "${TF_VAR_env}" && \
 
           terraform plan -out ${PIPELINE_PLAN}
 
         env:
-          TF_VAR_AZURE_SHORT: ${{ env.SHORTHAND_PROJECT_NAME }}
-          TF_VAR_AZURE_ENV: ${{ env.SHORTHAND_ENVIRONMENT }}
+          TF_VAR_short: ${{ env.SHORTHAND_PROJECT_NAME }}
+          TF_VAR_env: ${{ env.SHORTHAND_ENVIRONMENT }}
+          TF_VAR_loc: ${{ env.SHORTHAND_LOCATION }}
 
           TF_VAR_AZURE_BACKEND_SA_NAME: ${{ secrets.TF_VAR_AZURE_BACKEND_SA_NAME }}
           TF_VAR_AZURE_BACKEND_SA_KEY: ${{ secrets.TF_VAR_AZURE_BACKEND_SA_KEY}}
@@ -83,6 +85,6 @@ jobs:
         run: |
           terraform apply -auto-approve ${PIPELINE_PLAN}
         env:
-          TF_VAR_AZURE_SHORT: ${{ env.AZURE_SHORTHAND_PROJECT_NAME }}
-          TF_VAR_AZURE_ENV: ${{ env.AZURE_SHORTHAND_ENVIRONMENT }}
-
+          TF_VAR_short: ${{ env.SHORTHAND_PROJECT_NAME }}
+          TF_VAR_env: ${{ env.SHORTHAND_ENVIRONMENT }}
+          TF_VAR_loc: ${{ env.SHORTHAND_LOCATION }}
