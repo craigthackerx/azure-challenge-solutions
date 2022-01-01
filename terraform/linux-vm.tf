@@ -32,7 +32,7 @@ resource "azurerm_linux_virtual_machine" "lnx_vm" {
 
   admin_ssh_key {
     public_key = data.azurerm_ssh_public_key.mgmt_ssh_key.public_key
-    username   = "Local${var.short}Admin${terraform.workspace}"
+    username   = "Local${title(var.short)}Admin${terraform.workspace}"
   }
 
   source_image_reference {

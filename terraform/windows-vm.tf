@@ -26,7 +26,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   name                     = "win${var.short}${var.loc}${terraform.workspace}${count.index + 1}"
   computer_name            = "win${var.short}${var.loc}${terraform.workspace}${count.index + 1}"
   admin_password           = data.azurerm_key_vault_secret.mgmt_local_admin_pwd.value
-  admin_username           = "Local${var.short}Admin${terraform.workspace}"
+  admin_username           = "Local${title(var.short)}Admin${terraform.workspace}"
   provision_vm_agent       = "true"
   enable_automatic_updates = "false"
   patch_mode               = "Manual"
