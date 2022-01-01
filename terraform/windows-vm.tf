@@ -52,6 +52,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
 }
 
 resource "azurerm_application_security_group" "win_asg" {
+  count               = var.win_count
   name                = "asg-${azurerm_windows_virtual_machine.win_vm[count.index].name}"
   location            = azurerm_resource_group.vm_rg.location
   resource_group_name = azurerm_resource_group.vm_rg.name
