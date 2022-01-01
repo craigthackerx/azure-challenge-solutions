@@ -57,7 +57,7 @@ resource "azurerm_application_security_group" "win_asg" {
   tags = local.tags
 }
 
-resource "azurerm_network_interface_application_security_group_association" "asgnicassoc" {
+resource "azurerm_network_interface_application_security_group_association" "win_asg_association" {
   count = var.win_count
 
   network_interface_id          = element(azurerm_network_interface.win_nic.*.id, count.index + 1)
@@ -75,7 +75,7 @@ resource "azurerm_virtual_machine_extension" "win_custom_script" {
 
   protected_settings = <<PROTECTED_SETTINGS
       {
-        "commandToExecute": "powershell -encodedCommand ${textencodebase64(file("../azure-init/scripts/WindowsInitScript.ps1"), "UTF-16LE")}"",
+        "commandToExecute": "powershell -encodedCommand ${textencodebase64(file("../azure-init/scripts/WindowsInitScript.ps1"), "UTF-16LE")}",
       }
   PROTECTED_SETTINGS
 
