@@ -66,3 +66,19 @@ resource "azurerm_network_interface_application_security_group_association" "lnx
   network_interface_id          = element(azurerm_network_interface.lnx_nic.*.id, count.index + 1)
   application_security_group_id = azurerm_application_security_group.lnx_asg.id
 }
+
+resource "azurerm_dev_test_global_vm_shutdown_schedule" "stop_lnx_vm" {
+  count              = var.win_count
+  virtual_machine_id = element(azurerm_linux_virtual_machine.lnx_vm.*.id, count.index + 1)
+  location           = azurerm_resource_group.vm_rg.location
+  enabled            = true
+
+  daily_recurrence_time = "2200"
+  timezone              = "UTC Universal Coordinated Time"
+
+
+  notification_settings {
+    enabled         = false
+
+  }
+}

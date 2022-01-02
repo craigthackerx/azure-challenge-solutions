@@ -85,3 +85,19 @@ resource "azurerm_virtual_machine_extension" "win_custom_script" {
 
   tags = local.tags
 }
+
+resource "azurerm_dev_test_global_vm_shutdown_schedule" "stop_win_vm" {
+  count              = var.win_count
+  virtual_machine_id = element(azurerm_windows_virtual_machine.win_vm.*.id, count.index + 1)
+  location           = azurerm_resource_group.vm_rg.location
+  enabled            = true
+
+  daily_recurrence_time = "2200"
+  timezone              = "UTC Universal Coordinated Time"
+
+
+  notification_settings {
+    enabled         = false
+
+  }
+}
