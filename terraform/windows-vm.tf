@@ -76,7 +76,6 @@ resource "azurerm_virtual_machine_extension" "win_custom_script" {
   type                 = "CustomScriptExtension"
   type_handler_version = "1.10"
 
-
   protected_settings = <<PROTECTED_SETTINGS
       {
         "commandToExecute": "powershell -encodedCommand ${textencodebase64(file("../azure-init/scripts/WindowsInitScript.ps1"), "UTF-16LE")}"
