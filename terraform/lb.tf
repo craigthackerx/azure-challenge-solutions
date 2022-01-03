@@ -53,48 +53,48 @@ resource "azurerm_lb_probe" "lb_grafana_probe" {
   number_of_probes    = "2"
 }
 
-resource "azurerm_lb_rule" "lb_app_rule" {
-
-  resource_group_name = azurerm_resource_group.net_rg.name
-
-  frontend_port = azurerm_lb_probe.lb_app_probe.port
-  backend_port  = azurerm_lb_probe.lb_app_probe.port
-
-  backend_address_pool_ids = [azurerm_lb_backend_address_pool.lb_address_pool.id]
-  probe_id                = azurerm_lb_probe.lb_app_probe.id
-
-  frontend_ip_configuration_name = azurerm_lb.lb_public.*.frontend_ip_configuration.0.name
-  loadbalancer_id                = azurerm_lb.lb_public.id
-
-  name                    = "ruleb-app-${var.short}-${var.loc}-${terraform.workspace}"
-  enable_floating_ip      = false
-  enable_tcp_reset        = false
-  idle_timeout_in_minutes = "4"
-
-
-  protocol = azurerm_lb_probe.lb_app_probe.protocol
-}
-
-resource "azurerm_lb_rule" "lb_grafana_rule" {
-
-  resource_group_name = azurerm_resource_group.net_rg.name
-
-  frontend_port = azurerm_lb_probe.lb_grafana_probe.port
-  backend_port  = azurerm_lb_probe.lb_grafana_probe.port
-
-  backend_address_pool_ids = [azurerm_lb_backend_address_pool.lb_address_pool.id]
-  probe_id                = azurerm_lb_probe.lb_grafana_probe.id
-
-  frontend_ip_configuration_name = azurerm_lb.lb_public.*.frontend_ip_configuration.0.name
-  loadbalancer_id                = azurerm_lb.lb_public.id
-
-  name                    = "ruleb-grafana-${var.short}-${var.loc}-${terraform.workspace}"
-  enable_floating_ip      = false
-  enable_tcp_reset        = false
-  idle_timeout_in_minutes = "4"
-
-  protocol = azurerm_lb_probe.lb_app_probe.protocol
-}
+#resource "azurerm_lb_rule" "lb_app_rule" {
+#
+#  resource_group_name = azurerm_resource_group.net_rg.name
+#
+#  frontend_port = azurerm_lb_probe.lb_app_probe.port
+#  backend_port  = azurerm_lb_probe.lb_app_probe.port
+#
+#  backend_address_pool_ids = [azurerm_lb_backend_address_pool.lb_address_pool.id]
+#  probe_id                = azurerm_lb_probe.lb_app_probe.id
+#
+#  frontend_ip_configuration_name = azurerm_lb.lb_public.*.frontend_ip_configuration.0.name
+#  loadbalancer_id                = azurerm_lb.lb_public.id
+#
+#  name                    = "ruleb-app-${var.short}-${var.loc}-${terraform.workspace}"
+#  enable_floating_ip      = false
+#  enable_tcp_reset        = false
+#  idle_timeout_in_minutes = "4"
+#
+#
+#  protocol = azurerm_lb_probe.lb_app_probe.protocol
+#}
+#
+#resource "azurerm_lb_rule" "lb_grafana_rule" {
+#
+#  resource_group_name = azurerm_resource_group.net_rg.name
+#
+#  frontend_port = azurerm_lb_probe.lb_grafana_probe.port
+#  backend_port  = azurerm_lb_probe.lb_grafana_probe.port
+#
+#  backend_address_pool_ids = [azurerm_lb_backend_address_pool.lb_address_pool.id]
+#  probe_id                = azurerm_lb_probe.lb_grafana_probe.id
+#
+#  frontend_ip_configuration_name = azurerm_lb.lb_public.*.frontend_ip_configuration.0.name
+#  loadbalancer_id                = azurerm_lb.lb_public.id
+#
+#  name                    = "ruleb-grafana-${var.short}-${var.loc}-${terraform.workspace}"
+#  enable_floating_ip      = false
+#  enable_tcp_reset        = false
+#  idle_timeout_in_minutes = "4"
+#
+#  protocol = azurerm_lb_probe.lb_app_probe.protocol
+#}
 
 #resource "azurerm_network_interface_backend_address_pool_association" "lb_backend_pool_association" {
 #  backend_address_pool_id = azurerm_lb_backend_address_pool.lb_address_pool.id
