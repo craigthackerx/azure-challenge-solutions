@@ -4,12 +4,6 @@
 
 set -xeuo pipefail
 
-timedatectl set-timezone Europe/London && \
-firewall-cmd --zone=public --add-port=8080/tcp && \
-firewall-cmd --zone=public --add-port=8090/tcp && \
-firewall-cmd --reload && \
-loginctl enable-linger 1000 && \
-
 yum update -y && \
 yum install -y \
   podman \
@@ -21,6 +15,12 @@ yum install -y \
   zip \
   unzip \
   openssl && \
+
+timedatectl set-timezone Europe/London && \
+firewall-cmd --zone=public --add-port=8080/tcp && \
+firewall-cmd --zone=public --add-port=8090/tcp && \
+firewall-cmd --reload && \
+loginctl enable-linger 1000 && \
 
 yum clean all
 
