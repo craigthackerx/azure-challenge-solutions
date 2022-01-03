@@ -35,11 +35,21 @@ resource "azurerm_linux_virtual_machine" "lnx_vm" {
   }
 
   source_image_reference {
-    publisher = "Oracle"
-    offer     = "Oracle-Linux"
-    sku       = "81-gen2"
+    publisher = "debian"
+    offer     = "debian-11"
+    sku       = "11-gen2"
     version   = "latest"
   }
+
+#  publisher = "debian"
+#  offer     = "debian-11"
+#  sku       = "11-gen2"
+#  version   = "latest"
+
+#  publisher = "Oracle"
+#  offer     = "Oracle-Linux"
+#  sku       = "ol84-lvm-gen2"
+#  version   = "latest"
 
   os_disk {
     name                 = "lnx${var.short}${var.loc}${terraform.workspace}${count.index + 1}-osdisk"
