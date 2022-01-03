@@ -60,7 +60,7 @@ resource "azurerm_lb_rule" "lb_app_rule" {
   frontend_port = azurerm_lb_probe.lb_app_probe.port
   backend_port  = azurerm_lb_probe.lb_app_probe.port
 
-  backend_address_pool_id = azurerm_lb_backend_address_pool.lb_address_pool.id
+  backend_address_pool_ids = [azurerm_lb_backend_address_pool.lb_address_pool.id]
   probe_id                = azurerm_lb_probe.lb_app_probe.id
 
   frontend_ip_configuration_name = azurerm_lb.lb_public.*.frontend_ip_configuration.0.name
@@ -98,8 +98,8 @@ resource "azurerm_lb_rule" "lb_grafana_rule" {
 
 resource "azurerm_network_interface_backend_address_pool_association" "lb_backend_pool_association" {
   backend_address_pool_id = azurerm_lb_backend_address_pool.lb_address_pool.id
-  ip_configuration_name   = element(azurerm_network_interface.lnx_nic.ip_configuration.*.name, 0)
-  network_interface_id    = azurerm_network_interface.lnx_nic.id
+  ip_configuration_name   = element(azurerm_network_interface.lnx_nic.ip_configuration[count.index].*.name, 0)
+  network_interface_id    = azurerm_network_interface.lnx_nic[count.index].id
 }
 
 resource "azurerm_network_security_rule" "AlllowLBInbound" {
