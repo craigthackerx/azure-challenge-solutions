@@ -11,7 +11,7 @@ on:
 
 jobs:
   terraform:
-    name: 'Terraform CI'
+    name: 'Terraform Build'
     runs-on: ubuntu-latest
     environment: mvp
     env:

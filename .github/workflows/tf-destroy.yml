@@ -6,7 +6,7 @@ on:
 
 jobs:
   terraform:
-    name: 'Terraform CI'
+    name: 'Terraform Destroy'
     runs-on: ubuntu-latest
     environment: mvp
     env:

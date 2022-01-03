@@ -63,6 +63,7 @@ resource "azurerm_network_security_rule" "bas_nsg" {
 
 resource "azurerm_subnet_network_security_group_association" "bas_nsg_assoc" {
 
+  #Use depends on for bug - https://github.com/hashicorp/terraform-provider-azurerm/issues/5232
   depends_on = [
     azurerm_network_security_rule.bas_nsg
   ]
