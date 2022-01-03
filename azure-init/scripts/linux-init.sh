@@ -5,7 +5,6 @@
 set -xeuo pipefail
 
 timedatectl set-timezone Europe/London && \
-setsebool -P container_manage_cgroup on && \
 firewall-cmd --zone=public --add-port=8080/tcp && \
 firewall-cmd --zone=public --add-port=8090/tcp && \
 firewall-cmd --reload && \
@@ -29,7 +28,6 @@ yum clean all
    if [ "$(command -v pip3)" ]; then
 
      export PATH=$PATH:~/.local/bin && \
-     source ~/.bashrc
 
      git clone https://github.com/craigthackerx/azure-challenge-solutions.git && \
 
