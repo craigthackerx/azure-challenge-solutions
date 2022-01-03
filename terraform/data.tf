@@ -1,3 +1,3 @@
 data "local_file" "cloud_init" {
-  filename = "${path.cwd}../azure-init/scropts/cloud-init.yml"
+  filename = "${path.cwd}/cloud-init.yml"
 }
