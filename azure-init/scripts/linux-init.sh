@@ -28,7 +28,7 @@ yum clean all
 
    if [ "$(command -v pip3)" ]; then
 
-     export PATH=$PATH:${HOME}/.local/bin && \
+     export PATH=$PATH:~/.local/bin && \
 
      git clone https://github.com/craigthackerx/azure-challenge-solutions.git && \
 
