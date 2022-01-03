@@ -103,7 +103,7 @@ resource "azurerm_lb_rule" "lb_grafana_rule" {
 #}
 
 output "index" {
-  value = azurerm_network_interface.lnx_nic.ip_configuration[count.index].name
+  value = azurerm_network_interface.lnx_nic[count.index].ip_configuration.name
 }
 
 resource "azurerm_network_security_rule" "AlllowLBInbound" {
