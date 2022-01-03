@@ -2,44 +2,40 @@
 
 [ "$(whoami)" = root ] || { sudo "$0" "$@"; exit $?; }
 
+#Using bash strict mode causes sourcing the bashrc to fail so exporting path becomes harder when executing cloud-init
 set -xeuo pipefail
 
+#It's normally not a good idea to execute containers as root, but I am doing so for this challenge as non-root in Oracle Linux is alien to me.
+cd /root
+
 yum update -y && \
-yum install -y \
-  podman \
-  python3-pip \
-  git \
-  yum-utils \
-  dnf-plugins-core \
-  curl \
-  zip \
-  unzip \
-  openssl && \
+    yum install -y \
+    curl \
+    podman \
+    python3-pip \
+    git && \
 
-timedatectl set-timezone Europe/London && \
-firewall-cmd --zone=public --add-port=8080/tcp && \
-firewall-cmd --zone=public --add-port=8090/tcp && \
-firewall-cmd --reload && \
-loginctl enable-linger 1000 && \
-
-yum clean all
+    timedatectl set-timezone Europe/London && \
+    firewall-cmd --zone=public --add-port=8080/tcp && \
+    firewall-cmd --zone=public --add-port=8090/tcp && \
+    firewall-cmd --reload && \
+    loginctl enable-linger 1000
 
 
-   if [ "$(command -v pip3)" ]; then
+if [ "$(command -v pip3)" ]; then
 
-     export PATH=$PATH:~/.local/bin && \
+        /bin/pip3 install podman-compose && \
 
-     git clone https://github.com/craigthackerx/azure-challenge-solutions.git && \
+        rm -rf azure-challenge-solutions && \
+        /bin/git clone https://github.com/craigthackerx/azure-challenge-solutions.git && \
+        cd azure-challenge-solutions/container/podman/grafana && \
+        mkdir -p grafana-data && \
+        echo "The VM is now setup." && \
 
-     pip3 install --user podman-compose && \
+        yum clean all && \
 
-     rm -rf azure-challenge-solutions && \
-     cd azure-challenge-solutions/container/podman/grafana && \
-     mkdir -p grafana-data && \
-     echo "The VM is now setup." && \
+        cd .. && /root/.local/bin/podman-compose up -d && exit 0
 
-     cd .. && podman-compose up -d
-
-   else
-     echo "Error running user script"
-   fi
+else
+    echo "Error running user script" && exit 1
+fi

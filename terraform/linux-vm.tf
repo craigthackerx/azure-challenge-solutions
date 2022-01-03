@@ -66,24 +66,6 @@ resource "azurerm_network_interface_application_security_group_association" "lnx
   application_security_group_id = azurerm_application_security_group.lnx_asg.id
 }
 
-# Need to use custom script instead of cloud-init - https://stackoverflow.com/questions/67741343/azure-cloud-init-failed-to-install-packages
-resource "azurerm_virtual_machine_extension" "lnx_custom_script" {
-  count                = var.lnx_count
-  name                 = "CustomScript"
-  virtual_machine_id   = element(azurerm_linux_virtual_machine.lnx_vm.*.id, count.index + 1)
-  publisher            = "Microsoft.Azure.Extensions"
-  type                 = "CustomScript"
-  type_handler_version = "2.1"
-
-  protected_settings = <<PROTECTED_SETTINGS
-      {
-        "script": "${filebase64("../azure-init/scripts/linux-init.sh")}"
-      }
-PROTECTED_SETTINGS
-
-  tags = local.tags
-}
-
 resource "azurerm_dev_test_global_vm_shutdown_schedule" "stop_lnx_vm" {
   count              = var.win_count
   virtual_machine_id = element(azurerm_linux_virtual_machine.lnx_vm.*.id, count.index + 1)
@@ -100,3 +82,26 @@ resource "azurerm_dev_test_global_vm_shutdown_schedule" "stop_lnx_vm" {
 
   tags = local.tags
 }
+
+# Need to use custom script instead of cloud-init - https://stackoverflow.com/questions/67741343/azure-cloud-init-failed-to-install-packages
+resource "azurerm_virtual_machine_extension" "lnx_custom_script" {
+  count                = var.lnx_count
+  name                 = "CustomScript"
+  virtual_machine_id   = element(azurerm_linux_virtual_machine.lnx_vm.*.id, count.index + 1)
+  publisher            = "Microsoft.Azure.Extensions"
+  type                 = "CustomScript"
+  type_handler_version = "2.1"
+
+  protected_settings = <<PROTECTED_SETTINGS
+      {
+        "script": "${filebase64("../azure-init/scripts/linux-init.sh")}"
+      }
+PROTECTED_SETTINGS
+
+  tags = local.tags
+
+  depends_on = [
+  azurerm_dev_test_global_vm_shutdown_schedule.stop_lnx_vm
+  ]
+}
+
