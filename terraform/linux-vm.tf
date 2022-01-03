@@ -13,10 +13,6 @@ resource "azurerm_network_interface" "lnx_nic" {
   tags = local.tags
 }
 
-data "local_file" "cloud_init" {
-  filename = "../azure-init/scripts/cloud-init.yml"
-}
-
 resource "azurerm_linux_virtual_machine" "lnx_vm" {
   count                           = var.lnx_count
   location                        = azurerm_resource_group.vm_rg.location
