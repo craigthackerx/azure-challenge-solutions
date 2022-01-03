@@ -14,7 +14,7 @@ resource "azurerm_network_interface" "lnx_nic" {
 }
 
 data "local_file" "cloud_init" {
-  filename = "../azure-init/cloud-init.yml"
+  filename = "../azure-init/scripts/cloud-init.yml"
 }
 
 resource "azurerm_linux_virtual_machine" "lnx_vm" {
