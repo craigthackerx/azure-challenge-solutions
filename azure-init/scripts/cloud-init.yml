@@ -40,6 +40,7 @@ content: |
 
 runcmd:
   - timedatectl set-timezone Europe/London
+  - yum clean all
   - setsebool -P container_manage_cgroup on
   - chmod +x /root/podman/podman-init.sh
   - firewall-cmd --zone=public --add-port=8080/tcp
