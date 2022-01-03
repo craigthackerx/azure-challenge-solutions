@@ -2,7 +2,7 @@
 
 [ "$(whoami)" = root ] || { sudo "$0" "$@"; exit $?; }
 
-#Using bash strict mode causes sourcing the bashrc to fail so exporting path becomes harder when executing cloud-init
+#Using bash strict mode causes sourcing the bashrc to fail so exporting path becomes harder when executing cloud-init.
 set -xeuo pipefail
 
 #It's normally not a good idea to execute containers as root, but I am doing so for this challenge as non-root in Oracle Linux is alien to me.

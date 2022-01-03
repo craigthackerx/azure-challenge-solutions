@@ -21,69 +21,50 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "shell", inline: <<-SHELL
-      set -xeuo pipefail
+  #!/usr/bin/env bash
+  
+  [ "$(whoami)" = root ] || { sudo "$0" "$@"; exit $?; }
+  
+  #Using bash strict mode causes sourcing the bashrc to fail so exporting path becomes harder when executing cloud-init.
+  set -xeuo pipefail
+  
+  #It's normally not a good idea to execute containers as root, but I am doing so for this challenge as non-root in Oracle Linux is alien to me.
+  cd /root
+  
+  yum update -y && \
+    yum install -y \
+    curl \
+    podman \
+    python3-pip \
+    git && \
+  
+    timedatectl set-timezone Europe/London && \
+    firewall-cmd --zone=public --add-port=8080/tcp && \
+    firewall-cmd --zone=public --add-port=8090/tcp && \
+    firewall-cmd --reload && \
+    loginctl enable-linger 1000
 
-      #Add Timezone'
-      ln -snf /usr/share/zoneinfo/Europe/London /etc/localtime && echo Europe/London > /etc/timezone && \
-      
-      #Install packages
-      
-      yum update -y && \ 
-      yum install -y \
-      yum-utils \
-      git \
-      dnf-plugins-core \
-      curl \
-      git \
-      zip \
-      unzip && \
-
-      yum update -y && \
-      yum install -y \
-      python3-pip \
-      podman \
-      dos2unix \
-      openssl \
-      wget \
-      nano 
-
-      #Clean up installs
-      yum clean all && \
-
-      firewall-cmd --zone=public --add-port=8080/tcp && \
-      firewall-cmd --zone=public --add-port=8090/tcp && \
-      firewall-cmd --reload
-
-      #Configure ssh
-      systemctl enable ssh && \
-      systemctl restart ssh
-
-      echo vagrant:vagrant | chpasswd && \
-      loginctl enable-linger 1000
-
-      echo "Vagrant build done for root"
 
   SHELL
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
+if [ "$(command -v pip3)" ]; then
 
-   set -xeuo pipefail
-  
-    if [ "$(command -v pip3)" ]; then
-  
-      export PATH=$PATH:${HOME}/.local/bin && \
+        /bin/pip3 install podman-compose && \
 
-      pip3 install --user podman-compose && \
-  
-      cd azure-challenge-solutions/container/podman/grafana && \
-      mkdir -p grafana-data && \
-      systemctl --user enable --now dbus.socket && \
-      echo "The VM is now setup.  On your host, run vagrant ssh and then  cd azure-challenge-solutions/container/podman/ && podman-compose up -d" && \
-      
-      cd .. && podman-compose up -d
-  
-    else
-      echo "Error running user script"
-    fi
+        rm -rf azure-challenge-solutions && \
+        /bin/git clone https://github.com/craigthackerx/azure-challenge-solutions.git && \
+        cd azure-challenge-solutions/container/podman/grafana && \
+        mkdir -p grafana-data && \
+        echo "The VM is now setup." && \
+
+        yum clean all && \
+
+        cd .. && /root/.local/bin/podman-compose up -d && exit 0
+
+else
+    echo "Error running user script" && exit 1
+fi
+
   SHELL
 end

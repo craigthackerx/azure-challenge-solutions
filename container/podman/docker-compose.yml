@@ -12,11 +12,11 @@ services:
   grafana:
     build: ./grafana
     image: "docker.io/craigtho/azure-hello-world-grafana:latest"
-    container_name: azure-hello-world-grafama
+    container_name: azure-hello-world-grafana
     restart: unless-stopped
     ports:
       - "8090:3000/tcp"
     volumes:
-      - ./grafana/grafana-data:/var/lib/grafana
+      - grafana-data:/var/lib/grafana
 volumes:
   grafana-data:
