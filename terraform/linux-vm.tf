@@ -66,23 +66,6 @@ resource "azurerm_network_interface_application_security_group_association" "lnx
   application_security_group_id = azurerm_application_security_group.lnx_asg.id
 }
 
-resource "azurerm_dev_test_global_vm_shutdown_schedule" "stop_lnx_vm" {
-  count              = var.win_count
-  virtual_machine_id = element(azurerm_linux_virtual_machine.lnx_vm.*.id, count.index + 1)
-  location           = azurerm_resource_group.vm_rg.location
-  enabled            = true
-
-  daily_recurrence_time = "2200"
-  timezone              = "GMT Standard Time"
-
-  notification_settings {
-    enabled = false
-
-  }
-
-  tags = local.tags
-}
-
 # Need to use custom script instead of cloud-init - https://stackoverflow.com/questions/67741343/azure-cloud-init-failed-to-install-packages
 resource "azurerm_virtual_machine_extension" "lnx_custom_script" {
   count                = var.lnx_count

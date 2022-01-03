@@ -24,6 +24,20 @@ resource "azurerm_network_security_rule" "ALlowSSHRDPInboundFromBastion" {
   network_security_group_name = azurerm_network_security_group.main_nsg.name
 }
 
+resource "azurerm_network_security_rule" "AlllowWinToLnxInbound" {
+  name                                       = "AllowWinToLnx"
+  priority                                   = 200
+  direction                                  = "Inbound"
+  access                                     = "Allow"
+  protocol                                   = "TCP"
+  source_port_range                          = "*"
+  destination_port_ranges                    = ["22", "8080", "8090"]
+  source_application_security_group_ids      = [azurerm_application_security_group.win_asg.id]
+  destination_application_security_group_ids = [azurerm_application_security_group.lnx_asg.id]
+  resource_group_name                        = azurerm_resource_group.net_rg.name
+  network_security_group_name                = azurerm_network_security_group.main_nsg.name
+}
+
 #Explicit Deny Rule
 resource "azurerm_network_security_rule" "DenyAllInbound" {
   name                        = "DenyAllInbound"
@@ -46,7 +60,7 @@ resource "azurerm_network_security_rule" "AlllowInternetInboundToLb" {
   access                                     = "Allow"
   protocol                                   = "TCP"
   source_port_range                          = "*"
-  destination_port_ranges                    = ["8080", "8090"]
+  destination_port_ranges                    = ["8080"]
   source_address_prefix                      = "Internet"
   destination_address_prefixes               = [azurerm_public_ip.lb_pip.ip_address]
   resource_group_name                        = azurerm_resource_group.net_rg.name

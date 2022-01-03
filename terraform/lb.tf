@@ -3,7 +3,7 @@ resource "azurerm_public_ip" "lb_pip" {
   location            = azurerm_resource_group.net_rg.location
   resource_group_name = azurerm_resource_group.net_rg.name
   allocation_method   = "Static"
-  sku                 = "Standard"
+  sku                 = "Basic"
   tags                = local.tags
 }
 
@@ -109,7 +109,7 @@ resource "azurerm_network_security_rule" "AlllowLBInboundToAsg" {
   access                                     = "Allow"
   protocol                                   = "TCP"
   source_port_range                          = "*"
-  destination_port_ranges                    = ["8080", "8090"]
+  destination_port_ranges                    = ["8080"]
   source_address_prefix                      = "AzureLoadBalancer"
   destination_application_security_group_ids = [azurerm_application_security_group.lnx_asg.id]
   resource_group_name                        = azurerm_resource_group.net_rg.name

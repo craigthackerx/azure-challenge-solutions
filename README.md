@@ -28,7 +28,7 @@ Now to get into the challenge:
 For this, you are expected to implement and document how you would add the following users, roles and subscriptions to an Azure AD tenant. Please consider the least privilege and good implementation of automation for future repeatability:
 
 ### 1.1
-- Create 4 new users (not guest users) in your tenant with the following roles:
+**- Create 4 new users (not guest users) in your tenant with the following roles:**
    - Craig Thacker - Global Administrator
    - Charlie Johnstone - Global Reader
    - Alan Rae - User Access Administrator
@@ -36,16 +36,15 @@ For this, you are expected to implement and document how you would add the follo
    - Yours - Admin
 
 ### 1.2
-- Create 3 subscriptions:
-  - CyberScot-Hw-Prd
+**- Create 1 subscription:**
   - CyberScot-Hw-Mvp
-  - CyberScot-Hw-Stg
+
 
 ### 1.3
-- You need to add the following IAM access to these subscriptions:
-  - The user "Craig Thacker" needs to be able to manage the CyberScot-Prd and CyberScot-Stg subscription, but only read all resources in CyberScot-Mvp
+**- You need to add the following IAM access to these subscriptions: **
+  - The user "Craig Thacker" needs only to read all resources in CyberScot-Mvp
   - User "Charlie Johnstone" must be able to manage everything except other people's permissions on all subscriptions
-  - User "Alan Rae" must be able to read and edit the networking resources only in all 3 subscriptions
+  - User "Alan Rae" must be able only to read and edit the networking resources only in the subscription
   - User "Dante Alighieri" must be able to start and stop VMs in all subscriptions and read all resources, but nothing else
   - Give yourself access to everything
 
@@ -54,7 +53,9 @@ Please note there is more than one way to achieve this, and you are being scored
 
 ## Challenge 2: DevOps Task: CI/CD Automation tool implementation
 
-For this challenge, you need to setup an automation tool to run pipelines  and CI/CD on. This tool should have the latest version of Python3 with `pip`, latest Terraform installed and the ability to build OCI or Docker containers.  This can be a hosted tool such as GitHub Actions, Azure Devops or GitLab or a local hosted solution such as Jenkins.  You then must then create a pipeline which will output "Hello World!" to the terminal.  How you do this is your choice.
+For this challenge, you need to setup an automation tool to run pipelines  and CI/CD on. This tool should have the latest version of Python3 with `pip`, latest Terraform installed and the ability to build OCI or Docker containers.  This can be a hosted tool such as GitHub Actions, Azure Devops or GitLab or a local hosted solution such as Jenkins.  
+
+**You then must then create a pipeline which will output "Hello World!" to the terminal.  How you do this is your choice.**
 
 I would suggest using Azure DevOps or GitHub Actions, but again, this is open to interpretation for the engineer to provide a sufficient solution.
 
@@ -74,13 +75,13 @@ With terraform, provision an environment similar to that which follows in the Cy
 
 3. Document what you've done with comments, README's and or diagrams where appropriate.  No such thing as too much documentation!
 
-4. **DO NO** allow 3389 or 22 exposed to the internet on your VM. Only 8080 on the Linux VM should be exposed to the internet
+4. **DO NOT** allow 3389 or 22 exposed to the internet on your VM. Only 8080 on the Linux VM should be exposed to the internet
 
 5. Consider the setup of your Backend, e.g. `backend.tf` and Provider blocks, e.g. `provider.tf` carefully.
 
 ## Challenge 4: Automation Task - Start/Stop VMs on a schedule
 
-For the next ask, you need to implement a way for your Windows Virtual machine to be turned off at 8pm every night and started at 8am every morning.  This should be fully automated, and you should fully document how you would achieve this and implement it.
+For the next ask, you need to implement a way for your **Windows Virtual machine to be turned off at 8pm every night and started at 8am every morning**.  This should be fully automated, and you should fully document how you would achieve this and implement it.
 
 
 ## Challenge 5: DevOps Task - Write some application code & package
