@@ -16,7 +16,7 @@ variable "azure_bastion_required_rules" {
 }
 
 resource "azurerm_public_ip" "bas_pip" {
-  name                = "pip-${var.short}-${var.loc}-${terraform.workspace}"
+  name                = "pip-bas-${var.short}-${var.loc}-${terraform.workspace}"
   location            = azurerm_resource_group.net_rg.location
   resource_group_name = azurerm_resource_group.net_rg.name
   allocation_method   = "Static"

@@ -22,7 +22,7 @@ resource "azurerm_linux_virtual_machine" "lnx_vm" {
   admin_password                  = data.azurerm_key_vault_secret.mgmt_local_admin_pwd.value
   admin_username                  = "Local${var.short}Admin${terraform.workspace}"
   provision_vm_agent              = "true"
-  size                            = "Standard_B2s"
+  size                            = "Standard_B2s" # A Standard_B1s causes the waagent to go OOM.
   disable_password_authentication = true
 
   network_interface_ids = [
@@ -35,10 +35,10 @@ resource "azurerm_linux_virtual_machine" "lnx_vm" {
   }
 
   source_image_reference {
-      publisher = "Oracle"
-      offer     = "Oracle-Linux"
-      sku       = "ol84-lvm-gen2"
-      version   = "latest"
+    publisher = "Oracle"
+    offer     = "Oracle-Linux"
+    sku       = "ol84-lvm-gen2"
+    version   = "latest"
   }
 
   os_disk {
@@ -76,7 +76,7 @@ resource "azurerm_dev_test_global_vm_shutdown_schedule" "stop_lnx_vm" {
   timezone              = "GMT Standard Time"
 
   notification_settings {
-    enabled         = false
+    enabled = false
 
   }
 
@@ -100,8 +100,5 @@ PROTECTED_SETTINGS
 
   tags = local.tags
 
-  depends_on = [
-  azurerm_dev_test_global_vm_shutdown_schedule.stop_lnx_vm
-  ]
 }
 

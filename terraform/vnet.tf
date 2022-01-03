@@ -25,4 +25,3 @@ resource "azurerm_subnet" "bastion_sn" {
   virtual_network_name = azurerm_virtual_network.main_vnet.name
   address_prefixes     = ["10.0.1.224/27"]
 }
-

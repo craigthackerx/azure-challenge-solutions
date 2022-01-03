@@ -95,7 +95,7 @@ resource "azurerm_dev_test_global_vm_shutdown_schedule" "stop_win_vm" {
   timezone              = "GMT Standard Time"
 
   notification_settings {
-    enabled         = false
+    enabled = false
 
   }
 
