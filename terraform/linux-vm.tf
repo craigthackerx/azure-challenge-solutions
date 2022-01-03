@@ -37,7 +37,7 @@ resource "azurerm_linux_virtual_machine" "lnx_vm" {
   source_image_reference {
     publisher = "Oracle"
     offer     = "Oracle-Linux"
-    sku       = "ol84-lvm-gen2"
+    sku       = "81-gen2"
     version   = "latest"
   }
 
