@@ -35,10 +35,10 @@ resource "azurerm_linux_virtual_machine" "lnx_vm" {
   }
 
   source_image_reference {
-    publisher = "debian"
-    offer     = "debian-11"
-    sku       = "11-gen2"
-    version   = "latest"
+      publisher = "Oracle"
+      offer     = "Oracle-Linux"
+      sku       = "ol84-lvm-gen2"
+      version   = "latest"
   }
 
   os_disk {
