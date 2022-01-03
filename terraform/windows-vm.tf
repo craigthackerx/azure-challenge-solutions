@@ -95,9 +95,10 @@ resource "azurerm_dev_test_global_vm_shutdown_schedule" "stop_win_vm" {
   daily_recurrence_time = "2200"
   timezone              = "GMT Standard Time"
 
-
   notification_settings {
     enabled         = false
 
   }
+
+  tags = local.tags
 }
