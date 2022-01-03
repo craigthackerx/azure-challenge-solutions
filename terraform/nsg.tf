@@ -39,7 +39,21 @@ resource "azurerm_network_security_rule" "DenyAllInbound" {
   network_security_group_name = azurerm_network_security_group.main_nsg.name
 }
 
-resource "azurerm_subnet_network_security_group_association" "mauin_nsg_assoc" {
+resource "azurerm_network_security_rule" "AlllowInternetInboundToLb" {
+  name                                       = "AllowLBInboundToLb"
+  priority                                   = 1200
+  direction                                  = "Inbound"
+  access                                     = "Allow"
+  protocol                                   = "TCP"
+  source_port_range                          = "*"
+  destination_port_ranges                    = ["8080", "8090"]
+  source_address_prefix                      = "Internet"
+  destination_address_prefixes               = [azurerm_public_ip.lb_pip.ip_address]
+  resource_group_name                        = azurerm_resource_group.net_rg.name
+  network_security_group_name                = azurerm_network_security_group.main_nsg.name
+}
+
+resource "azurerm_subnet_network_security_group_association" "main_nsg_assoc" {
   network_security_group_id = azurerm_network_security_group.main_nsg.id
   subnet_id                 = azurerm_subnet.main_sn.id
 }
