@@ -52,7 +52,7 @@ Vagrant.configure("2") do |config|
       neofetch \
       openssh-server \
       openssl \
-      app-stack \
+      podman \
       pip \
       sudo \
       software-properties-common \
@@ -90,7 +90,7 @@ Vagrant.configure("2") do |config|
     mkdir -p grafana-data && \
     systemctl --user enable --now dbus.socket && \
     echo "The VM is now setup.  On your host, run vagrant ssh and then  cd azure-challenge-solutions/container/app-stack/ && app-stack-compose up -d" && \
-    cd .. && app-stack-compose up -d
+    cd .. && podman-compose up -d
 
   else
     echo "Error running user script"

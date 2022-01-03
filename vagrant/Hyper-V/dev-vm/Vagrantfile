@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
   yum update -y && \
     yum install -y \
     curl \
-    app-stack \
+    podman \
     python3-pip \
     git && \
   
