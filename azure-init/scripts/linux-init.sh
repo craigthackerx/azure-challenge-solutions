@@ -33,9 +33,9 @@ yum clean all
 
      pip3 install --user podman-compose && \
 
+     rm -rf azure-challenge-solutions && \
      cd azure-challenge-solutions/container/podman/grafana && \
      mkdir -p grafana-data && \
-     systemctl --user enable --now dbus.socket && \
      echo "The VM is now setup." && \
 
      cd .. && podman-compose up -d
