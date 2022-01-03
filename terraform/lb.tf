@@ -103,7 +103,7 @@ resource "azurerm_lb_probe" "lb_grafana_probe" {
 #}
 
 output "index" {
-  value = azurerm_network_interface.lnx_nic.*.ip_configuration.name
+  value = element(azurerm_network_interface.lnx_nic.*.ip_configuration, 0)
 }
 
 resource "azurerm_network_security_rule" "AlllowLBInbound" {
