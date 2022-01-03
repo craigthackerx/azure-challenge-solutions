@@ -19,9 +19,9 @@ resource "azurerm_linux_virtual_machine" "lnx_vm" {
   resource_group_name             = azurerm_resource_group.vm_rg.name
   name                            = "lnx${var.short}${var.loc}${terraform.workspace}${count.index + 1}"
   computer_name                   = "lnx${var.short}${var.loc}${terraform.workspace}${count.index + 1}"
+  admin_password                  = data.azurerm_key_vault_secret.mgmt_local_admin_pwd.value
   admin_username                  = "Local${var.short}Admin${terraform.workspace}"
   provision_vm_agent              = "true"
-  custom_data                     = base64encode(file("../azure-init/scripts/cloud-init.yml"))
   size                            = "Standard_B1s"
   disable_password_authentication = true
 
@@ -31,7 +31,7 @@ resource "azurerm_linux_virtual_machine" "lnx_vm" {
 
   admin_ssh_key {
     public_key = data.azurerm_ssh_public_key.mgmt_ssh_key.public_key
-    username   = "Local${title(var.short)}Admin${terraform.workspace}"
+    username   = "Local${var.short}Admin${terraform.workspace}"
   }
 
   source_image_reference {
@@ -40,16 +40,6 @@ resource "azurerm_linux_virtual_machine" "lnx_vm" {
     sku       = "11-gen2"
     version   = "latest"
   }
-
-#  publisher = "debian"
-#  offer     = "debian-11"
-#  sku       = "11-gen2"
-#  version   = "latest"
-
-#  publisher = "Oracle"
-#  offer     = "Oracle-Linux"
-#  sku       = "ol84-lvm-gen2"
-#  version   = "latest"
 
   os_disk {
     name                 = "lnx${var.short}${var.loc}${terraform.workspace}${count.index + 1}-osdisk"
