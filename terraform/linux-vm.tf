@@ -13,6 +13,10 @@ resource "azurerm_network_interface" "lnx_nic" {
   tags = local.tags
 }
 
+data "local_file" "cloud_init" {
+  filename = "../azure-init/cloud-init.yml"
+}
+
 resource "azurerm_linux_virtual_machine" "lnx_vm" {
   count                           = var.lnx_count
   location                        = azurerm_resource_group.vm_rg.location
@@ -24,7 +28,7 @@ resource "azurerm_linux_virtual_machine" "lnx_vm" {
   provision_vm_agent              = "true"
   size                            = "Standard_B1s"
   disable_password_authentication = true
-  custom_data                     = base64encode(file("../azure-init/scripts/cloud-init.yml"))
+  custom_data                     = base64encode(data.local_file.cloud_init.content)
 
   network_interface_ids = [
     element(azurerm_network_interface.lnx_nic.*.id, count.index + 1)
