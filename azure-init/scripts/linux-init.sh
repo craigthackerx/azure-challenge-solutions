@@ -8,7 +8,6 @@ set -xeuo pipefail
 #It's normally not a good idea to execute containers as root, but I am doing so for this challenge as non-root in Oracle Linux is alien to me.
 cd /root
 
-yum update -y && \
     yum install -y \
     curl \
     podman \
@@ -34,7 +33,7 @@ if [ "$(command -v pip3)" ]; then
 
         yum clean all && \
 
-        cd .. && /root/.local/bin/podman-compose up -d && exit 0
+        cd .. && /usr/local/bin/podman-compose up -d && exit 0
 
 else
     echo "Error running user script" && exit 1
