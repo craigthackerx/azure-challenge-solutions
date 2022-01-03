@@ -20,7 +20,7 @@ resource "azurerm_linux_virtual_machine" "lnx_vm" {
   name                            = "lnx${var.short}${var.loc}${terraform.workspace}${count.index + 1}"
   computer_name                   = "lnx${var.short}${var.loc}${terraform.workspace}${count.index + 1}"
   admin_password                  = data.azurerm_key_vault_secret.mgmt_local_admin_pwd.value
-  admin_username                  = "Local${title(var.short)}Admin${title(terraform.workspace)}"
+  admin_username                  = "Local${var.short}Admin${terraform.workspace}"
   provision_vm_agent              = "true"
   size                            = "Standard_B1s"
   disable_password_authentication = true
