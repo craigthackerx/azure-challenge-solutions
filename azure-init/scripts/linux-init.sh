@@ -26,7 +26,7 @@ yum install -y \
 yum clean all
 
 
-   if [ "$(command -v pip)" ]; then
+   if [ "$(command -v pip3)" ]; then
 
      export PATH=$PATH:${HOME}/.local/bin && \
 
