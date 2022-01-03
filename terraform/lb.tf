@@ -66,7 +66,7 @@ resource "azurerm_lb_rule" "lb_app_rule" {
   frontend_ip_configuration_name = azurerm_lb.lb_public.frontend_ip_configuration.0.name
   loadbalancer_id                = azurerm_lb.lb_public.id
 
-  name                    = "ruleb-app-${var.short}-${var.loc}-${terraform.workspace}"
+  name                    = "rule-app-${var.short}-${var.loc}-${terraform.workspace}"
   enable_floating_ip      = false
   enable_tcp_reset        = false
   idle_timeout_in_minutes = "4"
@@ -88,7 +88,7 @@ resource "azurerm_lb_rule" "lb_grafana_rule" {
   frontend_ip_configuration_name = azurerm_lb.lb_public.frontend_ip_configuration.0.name
   loadbalancer_id                = azurerm_lb.lb_public.id
 
-  name                    = "ruleb-grafana-${var.short}-${var.loc}-${terraform.workspace}"
+  name                    = "rule-grafana-${var.short}-${var.loc}-${terraform.workspace}"
   enable_floating_ip      = false
   enable_tcp_reset        = false
   idle_timeout_in_minutes = "4"
