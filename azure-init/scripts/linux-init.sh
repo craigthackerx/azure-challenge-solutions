@@ -27,8 +27,7 @@ if [ "$(command -v pip3)" ]; then
 
         rm -rf azure-challenge-solutions && \
         /bin/git clone https://github.com/craigthackerx/azure-challenge-solutions.git && \
-        cd azure-challenge-solutions/container/podman/grafana && \
-        mkdir -p grafana-data && \
+        cd azure-challenge-solutions/container/app-stack/grafana && \
         echo "The VM is now setup." && \
 
         yum clean all && \
