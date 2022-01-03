@@ -3,7 +3,7 @@ resource "azurerm_public_ip" "lb_pip" {
   location            = azurerm_resource_group.net_rg.location
   resource_group_name = azurerm_resource_group.net_rg.name
   allocation_method   = "Static"
-  sku                 = "Standard"
+  sku                 = "Basic"
   tags                = local.tags
 }
 
@@ -11,7 +11,7 @@ resource "azurerm_lb" "lb_public" {
   name                = "lb-${var.short}-${var.loc}-${terraform.workspace}"
   location            = azurerm_resource_group.net_rg.location
   resource_group_name = azurerm_resource_group.net_rg.name
-  sku                 = "Standard"
+  sku                 = "Basic"
 
   frontend_ip_configuration {
     name                 = "lb-${var.short}-${var.loc}-${terraform.workspace}-ipconfig"
