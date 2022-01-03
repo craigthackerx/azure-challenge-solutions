@@ -24,6 +24,7 @@ resource "azurerm_linux_virtual_machine" "lnx_vm" {
   provision_vm_agent              = "true"
   size                            = "Standard_B1s"
   disable_password_authentication = true
+  custom_data                     = base64encode(data.local_file.cloud_init.content)
 
   network_interface_ids = [
     element(azurerm_network_interface.lnx_nic.*.id, count.index + 1)
