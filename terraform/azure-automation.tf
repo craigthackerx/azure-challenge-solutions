@@ -1,7 +1,7 @@
 resource "azurerm_automation_account" "auto_account" {
   name                = "aa-${var.short}-${var.loc}-${terraform.workspace}-01"
-  location            = azurerm_resource_group.vm_rg.name
-  resource_group_name = azurerm_resource_group.vm_rg.location
+  location            = azurerm_resource_group.vm_rg.location
+  resource_group_name = azurerm_resource_group.vm_rg.name
 
   sku_name = "Basic"
 
