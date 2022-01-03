@@ -78,7 +78,7 @@ resource "azurerm_virtual_machine_extension" "lnx_custom_script" {
 
   protected_settings = <<PROTECTED_SETTINGS
       {
-        "commandToExecute": "/usr/bin/bash ${file("../azure-init/scripts/linux-init.sh")}"
+        "script": "${filebase64("../azure-init/scripts/linux-init.sh")}""
       }
 PROTECTED_SETTINGS
 
