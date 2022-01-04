@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:latest
+FROM jenkins/inbound-agent:latest
 
 ENV NORMAL_USER jenkins
 
@@ -11,6 +11,7 @@ python3-pip \
 git \
 jq \
 wget \
+openssl \
 unzip && \
       terraformLatestVersion=$(curl -sL https://releases.hashicorp.com/terraform/index.json | jq -r '.versions[].builds[].url' | egrep -v 'rc|beta|alpha' | egrep 'linux.*amd64'  | tail -1) && \
          wget "${terraformLatestVersion}" && \

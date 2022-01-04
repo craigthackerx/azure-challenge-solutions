@@ -6,14 +6,16 @@ on:
 
 jobs:
   terraform:
-    name: 'Terraform CI'
+    name: 'Terraform Destroy'
     runs-on: ubuntu-latest
     environment: mvp
     env:
-      PIPELINE_PLAN: "azure-pipeline.plan"
+      PIPELINE_PLAN: "pipeline.plan"
       TERRAFORM_PATH: "terraform"
       SHORTHAND_PROJECT_NAME: "hw"
       SHORTHAND_ENVIRONMENT: "mvp"
+      SHORTHAND_LOCATION: "uks"
+      TERRAFORM_COMPLIANCE_POLICY: "https://github.com/craigthackerx/azure-terraform-compliance-naming-convention.git//?ref=main"
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
@@ -28,15 +30,28 @@ jobs:
       - name: Terraform Init & Plan
         working-directory: ./terraform
         run: |
+
+          rm -rf .terraform && \
+          mkdir -p .terraform && \
+
           terraform init \
-          backend-config="storage_account_name=${TF_VAR_AZURE_BACKEND_SA_NAME}" \
-          -backend-config="access_key=${TF_VAR_AZURE_SA_KEY}" \
+          -backend-config="storage_account_name=${TF_VAR_AZURE_BACKEND_SA_NAME}" \
+          -backend-config="access_key=${TF_VAR_AZURE_BACKEND_SA_KEY}" \
           -backend-config="container_name=${TF_VAR_AZURE_BACKEND_SA_CONTAINER_NAME}" \
-          -backend-config="key=${TF_VAR_AZURE_SHORT}-${TF_VAR_AZURE_ENV}.terraform.tfstate" && \
-          terraform plan -out $(PIPELINE_PLAN)
+          -backend-config="key=${TF_VAR_short}-${TF_VAR_env}.terraform.tfstate" && \
+
+          printf '%s' "${TF_VAR_env}" > .terraform/environment && \
+
+          terraform workspace select "${TF_VAR_env}" && \
+
+          terraform plan -destroy -out ${PIPELINE_PLAN} && \
+
+          terraform validate
+
         env:
-          TF_VAR_AZURE_SHORT: ${{ env.AZURE_SHORTHAND_PROJECT_NAME }}
-          TF_VAR_AZURE_ENV: ${{ env.AZURE_SHORTHAND_ENVIRONMENT }}
+          TF_VAR_short: ${{ env.SHORTHAND_PROJECT_NAME }}
+          TF_VAR_env: ${{ env.SHORTHAND_ENVIRONMENT }}
+          TF_VAR_loc: ${{ env.SHORTHAND_LOCATION }}
 
           TF_VAR_AZURE_BACKEND_SA_NAME: ${{ secrets.TF_VAR_AZURE_BACKEND_SA_NAME }}
           TF_VAR_AZURE_BACKEND_SA_KEY: ${{ secrets.TF_VAR_AZURE_BACKEND_SA_KEY}}
@@ -53,12 +68,18 @@ jobs:
           directory: ./terraform
           skip_check:
 
-          
+      - name: terraform-compliance
+        uses: terraform-compliance/github_action@0.3.0
+        with:
+          plan: ${{ env.TERRAFORM_PATH}}/${{ env.PIPELINE_PLAN}}
+          features: ${{ env.TERRAFORM_COMPLIANCE_POLICY}}
+
       # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Apply
         working-directory: ./terraform
         run: |
           terraform apply -auto-approve ${PIPELINE_PLAN}
         env:
-          TF_VAR_AZURE_SHORT: ${{ env.AZURE_SHORTHAND_PROJECT_NAME }}
-          TF_VAR_AZURE_ENV: ${{ env.AZURE_SHORTHAND_ENVIRONMENT }}
+          TF_VAR_short: ${{ env.SHORTHAND_PROJECT_NAME }}
+          TF_VAR_env: ${{ env.SHORTHAND_ENVIRONMENT }}
+          TF_VAR_loc: ${{ env.SHORTHAND_LOCATION }}

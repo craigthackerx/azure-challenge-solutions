@@ -180,5 +180,5 @@ cython_debug/
 container/app-stack/grafana/grafana-data
 !container/app-stack/grafana/grafana-data/hello-world.py
 
-
-
+/container/jenkins/nginx/fullchain.pem
+/container/jenkins/nginx/wildcard.craigthacker.dev.pem

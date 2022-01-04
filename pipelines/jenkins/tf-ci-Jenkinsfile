@@ -9,8 +9,11 @@ pipeline {
         SHORTHAND_PROJECT_NAME = "hw"
         SHORTHAND_ENVIRONMENT_NAME = "mvp"
 
-        TF_VAR_AZURE_SHORT = ${SHORTHAND_PROJECT_NAME}
-        TF_VAR_AZURE_ENV = ${SHORTHAND_ENVIRONMENT_NAME}
+        TF_VAR_short = ${env.SHORTHAND_PROJECT_NAME}
+        TF_VAR_env = ${env.SHORTHAND_ENVIRONMENT_NAME}
+
+        CHECKOV_SKIP_TEST = ""
+        TERRAFORM_COMPLIANCE_POLICY = "https://github.com/craigthackerx/azure-terraform-compliance-naming-convention.git//?ref=main"
 
         TF_VAR_BACKEND_SA_NAME = credentials('TF_VAR_AZURE_BACKEND_SA_NAME')
         TF_VAR_AZURE_BACKEND_SA_KEY = credentials('TF_VAR_AZURE_BACKEND_SA_KEY')
@@ -26,23 +29,37 @@ pipeline {
 
         stage('Terraform Init and Plan') {
             steps {
-                script {
-                    sh '''
-                      terraform init \
-                      backend-config="storage_account_name=${TF_VAR_AZURE_BACKEND_SA_NAME}" \
-                      -backend-config="access_key=${TF_VAR_AZURE_SA_KEY}" \
-                      -backend-config="container_name=${TF_VAR_AZURE_BACKEND_SA_CONTAINER_NAME}" \
-                      -backend-config="key=${TF_VAR_AZURE_SHORT}-${TF_VAR_AZURE_ENV}.terraform.tfstate" && \
-                      terraform plan -out ${PIPELINE_PLAN}
-                    '''
-                }
+                dir('${env.TERRAFORM_PATH}') {
+                        sh '''
+                           rm -rf .terraform && \
+                           mkdir -p .terraform && \
+
+                           terraform init \
+                           -backend-config="storage_account_name=${TF_VAR_AZURE_BACKEND_SA_NAME}" \
+                           -backend-config="access_key=${TF_VAR_AZURE_BACKEND_SA_KEY}" \
+                           -backend-config="container_name=${TF_VAR_AZURE_BACKEND_SA_CONTAINER_NAME}" \
+                           -backend-config="key=${TF_VAR_short}-${TF_VAR_env}.terraform.tfstate" && \
+
+                           printf '%s' "${TF_VAR_env}" > .terraform/environment && \
+
+                           terraform workspace select "${TF_VAR_env}" && \
+
+                           terraform plan -out ${PIPELINE_PLAN} && \
+
+                           terraform validate
+                }    '''
             }
         }
+    }
 
         stage('CheckOv') {
             steps {
-                script {
-
+                dir('${env.TERRAFORM_PATH}') {
+                    script {
+                        sh '''
+                        terraform show -json ${PIPELINE_PLAN} > ${PIPELINE_PLAN}.json && \
+                        checkov -f ${PIPELINE_PLAN}.json --skip-check ${CHECKOV_SKIP_TESTS}
+                        '''
                     }
                 }
             }
@@ -51,15 +68,20 @@ pipeline {
 
         stage('Terraform-Compliance') {
             steps {
-                script {
-
+                dir('${env.TERRAFORM_PATH}') {
+              script {
+                  sh '''
+                     terraform-compliance -p ${PIPELINE_PLAN} -f ${TERRAFORM_COMPLIANCE_PATH}
+                     '''
                 }
             }
         }
+    }
 
     post {
         always {
             cleanWs()
         }
-    }
+     }
+   }
 }

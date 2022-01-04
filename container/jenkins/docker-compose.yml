@@ -1,16 +1,54 @@
 version: '3.8'
 services:
 
-  jenkins:
-    build: ./jenkins
-    image: "docker.io/craigtho/azure-jenkins:latest"
-    container_name: jenkins
+
+#  jenkins-nginx-proxy:
+#    build: ./nginx
+#    image: "docker.io/craigtho/jenkins-nginx:latest"
+#    container_name: jenkins-nginx
+#    restart: unless-stopped
+#    environment:
+#      TZ: "Europe/London"
+#    ports:
+#      - "443:443/tcp"
+#    volumes:
+#      - nginx_logs:/var/log/nginx
+
+  jenkins-controller:
+    build: ./jenkins-controller
+    image: "docker.io/craigtho/jenkins-controller:latest"
+    container_name: jenkins-controller
     restart: unless-stopped
     ports:
       - "8080:8080/tcp"
       - "50000:50000/tcp"
+    environment:
+      JENKINS_OPTS: "--prefix="
+      TZ: "Europe/London"
     volumes:
-      - jenkins_home:/var/jenkins_home
+      - jenkins_controller:/var/jenkins_home
+
+#  jenkins-agent:
+#    build: ./jenkins-agent
+#    image: "docker.io/craigtho/jenkins-agent:latest"
+#    init: true
+#    container_name: jenkins-agent
+#    restart: unless-stopped
+#    command:
+#      - "-url https://jenkins.craigthacker.dev/jenkins"
+#    environment:
+#     JENKINS_AGENT_NAME: "$$(openssl rand -base64 12)"
+#     JENKINS_AGENT_WORKDIR: "/home/jenkins"
+#     JENKINS_SECRET: "$${JENKINS_SECRET}"
+#     JENKINS_WEB_SOCKET: true
+#    depends_on:
+#      - jenkins-nginx-proxy
+#      - jenkins-controller
+#
+#    volumes:
+#      - jenkins_agent:/var/jenkins_home
 
 volumes:
-  jenkins_home:
+  jenkins_controller:
+#  nginx_logs:
+#  jenkins_agent:
