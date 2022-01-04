@@ -15,11 +15,11 @@ resource "azurerm_automation_runbook" "start_runbook" {
   automation_account_name = azurerm_automation_account.auto_account.name
   log_verbose             = "true"
   log_progress            = "true"
-  description             = "This is a start runbook"
-  runbook_type            = "PowerShellWorkflow"
+  description             = "This is a start PowerShell script, which, dependant on schedule, will start all VMs in a given subscription."
+  runbook_type            = "PowerShell"
 
   publish_content_link {
-    uri = "https://raw.githubusercontent.com/craigthackerx/azure-challenge-solutions/mvp/azure-init/scripts/StartVMRunbook.ps1"
+    uri = "https://raw.githubusercontent.com/craigthackerx/azure-challenge-solutions/mvp/azure-init/scripts/StartVMs.ps1"
   }
 
   tags = local.tags
@@ -32,8 +32,8 @@ resource "azurerm_automation_schedule" "start_vm" {
   frequency               = "Day"
   interval                = 1
   timezone                = "Europe/London"
-  start_time              = "2022-01-05T20:00:00Z"
-  description             = "Run every day"
+  start_time              = "2022-01-05T08:00:00Z"
+  description             = "Run every day at 8am"
 }
 
 resource "azurerm_automation_job_schedule" "start_vm_schedule" {
