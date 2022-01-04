@@ -3,11 +3,10 @@
 SUBSCRIPTION_ID="CyberScot-Hw-Mvp"
 SHORTHAND_NAME="hw"
 SHORTHAND_ENV="mvp"
-SHORTHAND_LOCATION="uks"
-SVC_USERNAME="podman"
+SHORTHAND_LOCATION="euw"
+LONGHAND_LOCATION="westeurope"
 
-
-set -xe
+set -xeuo pipefail
 
 print_success() {
     lightcyan='\033[1;36m'
@@ -33,6 +32,9 @@ clean_on_exit() {
     cat /dev/null > ~/.bash_history && history -c
 }
 
+#Without this, you have a chicken and an egg scenario, you need a storage account for terraform, you need an ARM template for ARM, or you can create in portal and terraform import, I prefer just using Azure-CLI and "one and done" it
+print_alert "This script is intended to be ran in the Cloud Shell in Azure to setup your pre-requisite items in a fresh tenant" && sleep 3s && \
+
 az account set --subscription "${SUBSCRIPTION_ID}" && \
 
     #Create Management Resource group and export its values
@@ -40,7 +42,7 @@ if
 
 az group create \
     --name "rg-${SHORTHAND_NAME}-${SHORTHAND_LOCATION}-${SHORTHAND_ENV}-mgt" \
-    --location "uksouth" \
+    --location "${LONGHAND_LOCATION}" \
     --subscription ${SUBSCRIPTION_ID} && \
 
     spokeMgmtRgName=$(az group show \
@@ -59,7 +61,7 @@ if
 az keyvault create \
     --name "kv-${SHORTHAND_NAME}-${SHORTHAND_LOCATION}-${SHORTHAND_ENV}-mgt-01" \
     --resource-group "${spokeMgmtRgName}" \
-    --location "uksouth" \
+    --location "${LONGHAND_LOCATION}" \
     --subscription "${SUBSCRIPTION_ID}"
 
 spokeKvName=$(az keyvault show \
@@ -98,7 +100,7 @@ mkdir -p "/tmp/${SHORTHAND_NAME}-${SHORTHAND_ENV}-ssh"
 ssh-keygen -b 4096 -t rsa -f "/tmp/${SHORTHAND_NAME}-${SHORTHAND_ENV}-ssh/azureid_rsa.key" -q -N '' && \
 
     az sshkey create \
-    --location "uksouth" \
+    --location "${LONGHAND_LOCATION}" \
     --public-key "@/tmp/${SHORTHAND_NAME}-${SHORTHAND_ENV}-ssh/azureid_rsa.key.pub" \
     --resource-group "${spokeMgmtRgName}" \
     --name "ssh-${SHORTHAND_NAME}-${SHORTHAND_LOCATION}-${SHORTHAND_ENV}-pub-mgt" && \
@@ -123,7 +125,7 @@ fi
 if
 
 az storage account create \
-    --location "uksouth" \
+    --location "${LONGHAND_LOCATION}" \
     --sku "Standard_LRS" \
     --access-tier "Hot" \
     --resource-group "${spokeMgmtRgName}" \

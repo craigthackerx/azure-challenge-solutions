@@ -168,7 +168,7 @@ dmypy.json
 cython_debug/
 /cyberscot/app/bin/*
 /cyberscot/app/lib/*
-/container/podman/grafana/grafana-data/
+/container/app-stack/grafana/grafana-data/
 
 
 #Vagrant ignore
@@ -177,8 +177,8 @@ cython_debug/
 *.package.box.*
 *package.box*
 
-container/podman/grafana/grafana-data
-!container/podman/grafana/grafana-data/hello-world.py
+container/app-stack/grafana/grafana-data
+!container/app-stack/grafana/grafana-data/hello-world.py
 
 
 

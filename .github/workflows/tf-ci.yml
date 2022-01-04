@@ -20,7 +20,8 @@ jobs:
       TERRAFORM_PATH: "terraform"
       SHORTHAND_PROJECT_NAME: "hw"
       SHORTHAND_ENVIRONMENT: "mvp"
-      TERRAFORM_COMPLIANCE_POLICY: "git://https://github.com/craigthackerx/azure-terraform-compliance-naming-convention.git"
+      SHORTHAND_LOCATION: "uks"
+      TERRAFORM_COMPLIANCE_POLICY: "https://github.com/craigthackerx/azure-terraform-compliance-naming-convention.git//?ref=main"
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
@@ -36,23 +37,27 @@ jobs:
         working-directory: ./terraform
         run: |
 
-          if [ -d ".terraform" ]; then rm -rf .terraform && \
+          rm -rf .terraform && \
           mkdir -p .terraform && \
 
           terraform init \
           -backend-config="storage_account_name=${TF_VAR_AZURE_BACKEND_SA_NAME}" \
-          -backend-config="access_key=${TF_VAR_AZURE_SA_KEY}" \
+          -backend-config="access_key=${TF_VAR_AZURE_BACKEND_SA_KEY}" \
           -backend-config="container_name=${TF_VAR_AZURE_BACKEND_SA_CONTAINER_NAME}" \
-          -backend-config="key=${TF_VAR_AZURE_SHORT}-${TF_VAR_AZURE_ENV}.terraform.tfstate" && \
+          -backend-config="key=${TF_VAR_short}-${TF_VAR_env}.terraform.tfstate" && \
 
-          printf '%s' "${TF_VAR_AZURE_ENV}" > .terraform/environment && \
+          printf '%s' "${TF_VAR_env}" > .terraform/environment && \
 
-          terraform workspace select "${TF_VAR_AZURE_ENV}" && \
+          terraform workspace select "${TF_VAR_env}" && \
 
-          terraform plan -out ${PIPELINE_PLAN}
+          terraform plan -out ${PIPELINE_PLAN} && \
+
+          terraform validate
+
         env:
-          TF_VAR_AZURE_SHORT: ${{ env.SHORTHAND_PROJECT_NAME }}
-          TF_VAR_AZURE_ENV: ${{ env.SHORTHAND_ENVIRONMENT }}
+          TF_VAR_short: ${{ env.SHORTHAND_PROJECT_NAME }}
+          TF_VAR_env: ${{ env.SHORTHAND_ENVIRONMENT }}
+          TF_VAR_loc: ${{ env.SHORTHAND_LOCATION }}
 
           TF_VAR_AZURE_BACKEND_SA_NAME: ${{ secrets.TF_VAR_AZURE_BACKEND_SA_NAME }}
           TF_VAR_AZURE_BACKEND_SA_KEY: ${{ secrets.TF_VAR_AZURE_BACKEND_SA_KEY}}
@@ -64,7 +69,7 @@ jobs:
           TF_VAR_AZURE_SUBSCRIPTION_ID: ${{ secrets.TF_VAR_AZURE_SUBSCRIPTION_ID}}
 
       - name: Checkov GitHub Action
-        uses: bridgecrewio/checkov-action
+        uses: bridgecrewio/checkov-action@v12.641.0
         with:
           directory: ./terraform
           skip_check:
@@ -72,5 +77,5 @@ jobs:
       - name: terraform-compliance
         uses: terraform-compliance/github_action@0.3.0
         with:
-          plan: ${{ env.PIPELINE_PLAN}}
+          plan: ${{ env.TERRAFORM_PATH}}/${{ env.PIPELINE_PLAN}}
           features: ${{ env.TERRAFORM_COMPLIANCE_POLICY}}
