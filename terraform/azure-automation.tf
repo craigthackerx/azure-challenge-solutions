@@ -40,6 +40,6 @@ resource "azurerm_automation_job_schedule" "start_vm_schedule" {
   schedule_name           = azurerm_automation_schedule.start_vm.name
   runbook_name            = azurerm_automation_runbook.start_runbook.name
   parameters = {
-    AZURESUBSCRIPTIONID        = var.AZURE_SUBSCRIPTION_ID
+    azuresubscriptionid       = var.AZURE_SUBSCRIPTION_ID
   }
 }
