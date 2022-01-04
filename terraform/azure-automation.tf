@@ -21,6 +21,8 @@ resource "azurerm_automation_runbook" "start_runbook" {
   publish_content_link {
     uri = "https://raw.githubusercontent.com/craigthackerx/azure-challenge-solutions/mvp/azure-init/scripts/StartVMRunbook.ps1"
   }
+
+  tags = local.tags
 }
 
 resource "azurerm_automation_schedule" "start_vm" {
