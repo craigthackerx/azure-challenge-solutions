@@ -7,7 +7,7 @@ resource "azurerm_automation_account" "auto_account" {
 
   tags = local.tags
 }
-
+#For this solution to work, you need to manually create a RunAsAccount in the portal - It is currently not possible to do this in Terraform and its very quick.  This is done via Automation Account -> Run As Accounts -> Create Run As Account.  Done :)
 resource "azurerm_automation_runbook" "start_runbook" {
   name                = "Start-AzureVM"
   location            = azurerm_resource_group.vm_rg.location
