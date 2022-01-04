@@ -53,8 +53,8 @@ resource "azurerm_network_security_rule" "DenyAllInbound" {
   network_security_group_name = azurerm_network_security_group.main_nsg.name
 }
 
-resource "azurerm_network_security_rule" "AlllowInternetInboundToLb" {
-  name                                       = "AllowLBInboundToLb"
+resource "azurerm_network_security_rule" "AllowInternetInboundToLnxAsg" {
+  name                                       = "AllowInternetToLnxAsgInbound"
   priority                                   = 1200
   direction                                  = "Inbound"
   access                                     = "Allow"
@@ -62,10 +62,25 @@ resource "azurerm_network_security_rule" "AlllowInternetInboundToLb" {
   source_port_range                          = "*"
   destination_port_ranges                    = ["8080"]
   source_address_prefix                      = "Internet"
-  destination_address_prefixes               = [azurerm_public_ip.lb_pip.ip_address]
+  destination_application_security_group_ids = [azurerm_application_security_group.lnx_asg.id]
   resource_group_name                        = azurerm_resource_group.net_rg.name
   network_security_group_name                = azurerm_network_security_group.main_nsg.name
 }
+
+resource "azurerm_network_security_rule" "AlllowLBInboundToAsg" {
+  name                                       = "AllowLBInboundToAsg"
+  priority                                   = 1100
+  direction                                  = "Inbound"
+  access                                     = "Allow"
+  protocol                                   = "TCP"
+  source_port_range                          = "*"
+  destination_port_ranges                    = ["8080"]
+  source_address_prefix                      = "AzureLoadBalancer"
+  destination_application_security_group_ids = [azurerm_application_security_group.lnx_asg.id]
+  resource_group_name                        = azurerm_resource_group.net_rg.name
+  network_security_group_name                = azurerm_network_security_group.main_nsg.name
+}
+
 
 resource "azurerm_subnet_network_security_group_association" "main_nsg_assoc" {
   network_security_group_id = azurerm_network_security_group.main_nsg.id

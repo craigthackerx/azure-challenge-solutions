@@ -1,9 +1,56 @@
-$runBookSplat = @{
-    Name                  = 'Azure-VM-Schedule-Start'
-    ResourceGroupName     = 'rg-hw-uks-mvp-vm'
-    AutomationAccountName = 'aa-hw-uks-mvp-01'
-    Path                  = 'https://raw.githubusercontent.com/craigthackerx/azure-challenge-solutions/mvp/azure-init/scripts/StartVMs.ps1'
-    Type                  = 'PowerShell'
-    Force                 = $true
+Workflow Start-AzureVM
+{
+    Param
+    (
+        [Parameter(Mandatory=$true)][ValidateNotNullOrEmpty()]
+        [String]
+        $AzureSubscriptionId,
+        [Parameter(Mandatory=$false)][ValidateNotNullOrEmpty()]
+        [String]
+        $AzureVMList="All",
+        [Parameter(Mandatory=$false)][ValidateSet()]
+        [String]
+        $Action="Start"
+    )
+
+    $credential = Get-AutomationPSCredential -Name 'AzureCredential'
+    Login-AzureRmAccount -Credential $credential
+    Select-AzureRmSubscription -SubscriptionId $AzureSubscriptionId
+
+    if($AzureVMList -ne "All")
+    {
+        $AzureVMs = $AzureVMList.Split(",")
+        [System.Collections.ArrayList]$AzureVMsToHandle = $AzureVMs
+    }
+    else
+    {
+        $AzureVMs = (Get-AzureRmVM).Name
+        [System.Collections.ArrayList]$AzureVMsToHandle = $AzureVMs
+
+    }
+
+    foreach($AzureVM in $AzureVMsToHandle)
+    {
+        if(!(Get-AzureRmVM | ? {$_.Name -eq $AzureVM}))
+        {
+            throw " AzureVM : [$AzureVM] - Does not exist! - Check your inputs "
+        }
+    }
+
+    if($Action -eq "Stop")
+    {
+        Write-Output "Stopping VMs";
+        foreach -parallel ($AzureVM in $AzureVMsToHandle)
+        {
+            Get-AzureRmVM | ? {$_.Name -eq $AzureVM} | Stop-AzureRmVM -Force
+        }
+    }
+    else
+    {
+        Write-Output "Starting VMs";
+        foreach -parallel ($AzureVM in $AzureVMsToHandle)
+        {
+            Get-AzureRmVM | ? {$_.Name -eq $AzureVM} | Start-AzureRmVM
+        }
+    }
 }
-Import-AzAutomationRunbook @runBookSplat
