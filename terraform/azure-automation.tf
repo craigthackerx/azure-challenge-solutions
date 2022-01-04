@@ -10,8 +10,8 @@ resource "azurerm_automation_account" "auto_account" {
 
 resource "azurerm_automation_runbook" "start_runbook" {
   name                = "Start-AzureVM"
-  location            = azurerm_resource_group.vm_rg.name
-  resource_group_name = azurerm_resource_group.vm_rg.location
+  location            = azurerm_resource_group.vm_rg.location
+  resource_group_name = azurerm_resource_group.vm_rg.name
   automation_account_name = azurerm_automation_account.auto_account.name
   log_verbose             = "true"
   log_progress            = "true"
