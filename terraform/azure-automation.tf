@@ -32,7 +32,7 @@ resource "azurerm_automation_schedule" "start_vm" {
   frequency               = "Day"
   interval                = 1
   timezone                = "Europe/London"
-  start_time              = "2022-01-03T20:00:00Z"
+  start_time              = "2022-01-05T20:00:00Z"
   description             = "Run every day"
 }
 
